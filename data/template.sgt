@@ -1,0 +1,31 @@
+# fpc-sitegen example template
+# labels (e.g. head-format) can be taken as plain-text when prefixed with a back-slash
+
+head-format:
+<div class="header"> $$CONTENT$$ </div>
+
+sub-head-format:
+<div class="sub-header"> $$CONTENT$$ </div>
+
+text-format:
+<div class="text"> $$CONTENT$$ </div>
+
+section-format:
+<div id="section-$$SECTION_NAME$$">
+  $$CONTENT$$
+</div>
+
+output-format:
+<!DOCTYPE html>
+<!-- fpc-sitegen template -->
+<html>
+  <head>
+    <title> $$DOCUMENT_TITLE$$ </title>
+    <link rel="stylesheet" type="text/css" src="example.css" />
+  </head>
+  <body>
+    <div id="content"> 
+      $$CONTENT$$
+    </div>
+  </body>
+</html>
