@@ -4,7 +4,7 @@ unit uGenerator;
 
 interface
 
-uses uSADParser, uTemplate;
+uses SysUtils, uSADParser, uTemplate;
 
 type
   TGenError = (geNONE, geUNKNOWN, geSRC_NOT_FOUND, geTEMPLATE_NOT_FOUND, geSRC_PARSING_ERROR,
@@ -40,7 +40,6 @@ function GenerateSingle(const src: String; const template_src: String; const out
 var
   generator: TGenerator;
   template_res: TTemplateResult;
-  template: TTemplate;
 begin
   GenerateSingle.is_ok   := True;
   GenerateSingle.err     := geNONE;
@@ -55,9 +54,30 @@ begin
     exit;
   end;
 
-  template := template_res.value;
+  generator.template := template_res.value;
 
+  if not FileExists(src) then
+  begin
+    GenerateSingle.is_ok   := False;
+    GenerateSingle.err     := geSRC_NOT_FOUND;
+    GenerateSingle.err_msg := 'can''t open source: No such file or directory';
+    exit;
+  end;
 
+  Assign(generator.source.doc_file, src);
+  ReSet(generator.source.doc_file);
+  if not ParseStructure(generator.source) then
+  begin
+    GenerateSingle.is_ok   := False;
+    GenerateSingle.err     := geSRC_PARSING_ERROR;
+    GenerateSingle.err_msg := Format('failed to parse source %s:%d: %s', [
+                                  src,
+                                  generator.source.line_number,
+                                  uSADParser.parse_error
+                                ]
+                              );
+    exit;
+  end;
 end;
 
 end.
