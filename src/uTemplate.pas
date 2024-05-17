@@ -55,7 +55,7 @@ function Parse(const src: String): TTemplateResult;
 
 const
   labels: array[TParseState] of string = (
-    '?', 'head-format:', 'sub-head-format:', 'text-format:', 'section-format:', 'output-format',
+    '?', 'head-format:', 'sub-head-format:', 'text-format:', 'section-format:', 'output-format:',
     '?'
   );
 
@@ -77,16 +77,12 @@ end;
 {
   Parses a singular line and updates the parser state.
 }
-function __ParseLine(cline: String; const nline: Integer; var state: TParseState;
-                     var raw_template: TRawTemplate): TTemplateResult;
+procedure __ParseLine(cline: String; const nline: Integer; var state: TParseState;
+                      var raw_template: TRawTemplate);
 var
   new_state: TParseState;
   state_changed: Boolean;
 begin
-  __ParseLine.is_ok   := True;
-  __ParseLine.err     := teNONE;
-  __ParseLine.err_msg := '';
-
   new_state := __LabelToState(Trim(cline));
   state_changed := (new_state <> state) and (new_state <> psNONE);
 
@@ -100,7 +96,22 @@ begin
     exit;
   end;
 
-  writeln('state: ', state);
+  case state of
+    psNONE:
+      exit;
+    psHEAD_FORMAT:
+      raw_template.head_format := raw_template.head_format + cline + sLineBreak;
+    psSUB_HEAD_FORMAT:
+      raw_template.sub_head_format := raw_template.sub_head_format + cline + sLineBreak;
+    psTEXT_FORMAT:
+      raw_template.text_format := raw_template.text_format + cline + slinebreak;
+    psSECTION_FORMAT:
+      raw_template.section_format := raw_template.section_format + cline + slinebreak;
+    psOUTPUT_FORMAT:
+      raw_template.output_format := raw_template.output_format + cline + slinebreak;
+    psERROR:
+      exit;
+  end;
 end;
 
 { --- Public Functions --- }
@@ -141,9 +152,7 @@ begin
   begin
     readln(input_file, cline);
     Inc(nline);
-    Parse := __ParseLine(cline, nline, state, raw_template);
-    if not Parse.is_ok then
-      break;
+    __ParseLine(cline, nline, state, raw_template);
 
     if state = psERROR then
     begin
@@ -157,6 +166,12 @@ begin
   Close(input_file);
   if not Parse.is_ok then
     exit;
+
+  writeln('head = ', raw_template.head_format);
+  writeln('subhead = ', raw_template.sub_head_format);
+  writeln('text = ', raw_template.text_format);
+  writeln('section = ', raw_template.section_format);
+  writeln('output = ', raw_template.output_format);
 
   { TODO: Translate Raw Template into TTemplate }
 end;
