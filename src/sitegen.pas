@@ -1,0 +1,3 @@
+program sitegen;
+begin
+end.
