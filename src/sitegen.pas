@@ -27,4 +27,5 @@ begin
 
   writeln('Generation Error: ', res.err);
   writeln('==> ', res.err_msg);
+  halt(1);
 end.
