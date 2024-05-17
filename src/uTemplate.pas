@@ -4,7 +4,7 @@ unit uTemplate;
 
 interface
 
-uses SysUtils;
+uses StrUtils, SysUtils, Types;
 
 type
   TTemplateError = (teNONE, teNOT_FOUND, tePARSING_ERROR, teUNKNOWN);
@@ -114,13 +114,48 @@ begin
   end;
 end;
 
+function __TranslateRawTemplate(raw: TRawTemplate): TTemplateResult;
+const
+  CONTENT_MARKER = '$$CONTENT$$';
+var
+  res: TTemplate;
+  tmp: TStringDynArray;
+begin
+  __TranslateRawTemplate.is_ok   := True;
+  __TranslateRawTemplate.err     := teNONE;
+  __TranslateRawTemplate.err_msg := '';
+
+  { TODO: Maybe add escaping of $$CONTENT$$ ? }
+
+  tmp := SplitString(raw.head_format, CONTENT_MARKER);
+  res.head_format.prefix_text := tmp[0];
+  res.head_format.postfix_text := tmp[1];
+
+  tmp := SplitString(raw.sub_head_format, CONTENT_MARKER);
+  res.sub_head_format.prefix_text := tmp[0];
+  res.sub_head_format.postfix_text := tmp[1];
+
+  tmp := SplitString(raw.text_format, CONTENT_MARKER);
+  res.text_format.prefix_text := tmp[0];
+  res.text_format.postfix_text := tmp[1];
+
+  tmp := SplitString(raw.section_format, CONTENT_MARKER);
+  res.section_format.prefix_text := tmp[0];
+  res.section_format.postfix_text := tmp[1];
+
+  tmp := SplitString(raw.output_format, CONTENT_MARKER);
+  res.output_format.prefix_text := tmp[0];
+  res.output_format.postfix_text := tmp[1];
+
+  __TranslateRawTemplate.value := res;
+end;
+
 { --- Public Functions --- }
 
 function Parse(const src: String): TTemplateResult;
 var
   state: TParseState;
 
-  res: TTemplate;
   raw_template: TRawTemplate;
 
   input_file: TextFile;
@@ -128,7 +163,6 @@ var
   nline: Integer; { Current line number }
 begin
   Parse.is_ok   := True;
-  Parse.value   := res;
   Parse.err     := teNONE;
   Parse.err_msg := '';
 
@@ -164,16 +198,11 @@ begin
   end;
 
   Close(input_file);
+
   if not Parse.is_ok then
     exit;
 
-  writeln('head = ', raw_template.head_format);
-  writeln('subhead = ', raw_template.sub_head_format);
-  writeln('text = ', raw_template.text_format);
-  writeln('section = ', raw_template.section_format);
-  writeln('output = ', raw_template.output_format);
-
-  { TODO: Translate Raw Template into TTemplate }
+  Parse := __TranslateRawTemplate(raw_template);
 end;
 
 end.
