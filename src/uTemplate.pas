@@ -7,7 +7,7 @@ interface
 uses StrUtils, SysUtils, Types;
 
 type
-  TTemplateError = (teNONE, teNOT_FOUND, tePARSING_ERROR, teUNKNOWN);
+  TTemplateError = (teNONE, teNOT_FOUND, tePARSING_ERROR, teMISSING_FORMAT, teUNKNOWN);
 
   {
     Template formatting works by inserting $$CONTENT$$ into your format definition.
@@ -121,9 +121,22 @@ var
   res: TTemplate;
   tmp: TStringDynArray;
 begin
-  __TranslateRawTemplate.is_ok   := True;
-  __TranslateRawTemplate.err     := teNONE;
-  __TranslateRawTemplate.err_msg := '';
+  __TranslateRawTemplate.is_ok   := (Length(raw.head_format) > 0) and
+                                    (Length(raw.sub_head_format) > 0) and
+                                    (Length(raw.text_format) > 0) and
+                                    (Length(raw.section_format) > 0) and
+                                    (Length(raw.output_format) > 0);
+
+  if not __TranslateRawTemplate.is_ok then
+  begin
+    __TranslateRawTemplate.err     := teMISSING_FORMAT;
+    __TranslateRawTemplate.err_msg := 'the template is missing one or more formats!';
+    exit;
+  end
+  else begin
+    __TranslateRawTemplate.err     := teNONE;
+    __TranslateRawTemplate.err_msg := '';
+  end;
 
   { TODO: Maybe add escaping of $$CONTENT$$ ? }
 
