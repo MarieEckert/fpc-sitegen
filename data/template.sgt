@@ -3,18 +3,14 @@
 
 head-format:
 <div class="header"> $$CONTENT$$ </div>
-
 sub-head-format:
 <div class="sub-header"> $$CONTENT$$ </div>
-
 text-format:
 <div class="text"> $$CONTENT$$ </div>
-
 section-format:
 <div id="section-$$SECTION_NAME$$">
   $$CONTENT$$
 </div>
-
 output-format:
 <!DOCTYPE html>
 <!-- fpc-sitegen template -->
