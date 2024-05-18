@@ -4,7 +4,7 @@ unit uGenerator;
 
 interface
 
-uses SysUtils, uSADParser, uTemplate;
+uses SysUtils, uSADParser, uShared, uTemplate, uTranslator;
 
 type
   TGenError = (geNONE, geUNKNOWN, geSRC_NOT_FOUND, geTEMPLATE_NOT_FOUND, geSRC_PARSING_ERROR,
@@ -17,11 +17,6 @@ type
     value   : String;
   end;
 
-  TGenerator = record
-    template : TTemplate;
-    source   : TSADocument;
-  end;
-
 function GenerateSingle(const src: String; const template_src: String; const out: String)
                        : TGenResult;
 
@@ -29,62 +24,14 @@ const
   TEMPLATE_TO_GEN_ERRORS: array[TTemplateError] of TGenError = (
     geNONE, geTEMPLATE_NOT_FOUND, geTEMPLATE_PARSING_ERROR, geTEMPLATE_INCOMPLETE, geUNKNOWN
   );
+  TRANSLATE_TO_GEN_ERRORS: array[TTranslateError] of TGenError = (
+    geNONE, geUNKNOWN, geTRANSLATION_ERROR
+  );
 
 implementation
 
 { --- Local Functions --- }
 
-{
-  All __Translate functions are intended to append to TGenResult.value, except
-  for __TranslateSource (whose job is to begin translation
-}
-
-function __TranslateTitle(generator: TGenerator): TGenResult;
-begin
-  __TranslateTitle.is_ok   := True;
-  __TranslateTitle.err     := geNONE;
-  __TranslateTitle.err_msg := '';
-end;
-
-function __TranslateHeader(generator: TGenerator; header: String): TGenResult;
-begin
-  __TranslateHeader.is_ok   := True;
-  __TranslateHeader.err     := geNONE;
-  __TranslateHeader.err_msg := '';
-end;
-
-function __TranslateSubHeader(generator: TGenerator; header: String): TGenResult;
-begin
-  __TranslateSubHeader.is_ok   := True;
-  __TranslateSubHeader.err     := geNONE;
-  __TranslateSubHeader.err_msg := '';
-end;
-
-function __TranslateSection(generator: TGenerator; section: TSection): TGenResult;
-begin
-  __TranslateSection.is_ok   := True;
-  __TranslateSection.err     := geNONE;
-  __TranslateSection.err_msg := '';
-end;
-
-function __TranslateSource(generator: TGenerator): TGenResult;
-begin
-  __TranslateSource.is_ok   := True;
-  __TranslateSource.err     := geNONE;
-  __TranslateSource.err_msg := '';
-
-  __TranslateSource.value := generator.template.output_format.prefix_text;
-
-  __TranslateSource := __TranslateTitle(generator);
-  if not __TranslateSource.is_ok then
-    exit;
-
-  __TranslateSource := __TranslateSection(generator, generator.source.root_section);
-  if not __TranslateSource.is_ok then
-    exit;
-
-  __TranslateSource.value := generator.template.output_format.postfix_text;
-end;
 
 { --- Public Functions --- }
 
