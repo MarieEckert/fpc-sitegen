@@ -14,6 +14,7 @@ type
     is_ok   : Boolean;
     err     : TGenError;
     err_msg : String;
+    value   : String;
   end;
 
   TGenerator = record
@@ -32,6 +33,58 @@ const
 implementation
 
 { --- Local Functions --- }
+
+{
+  All __Translate functions are intended to append to TGenResult.value, except
+  for __TranslateSource (whose job is to begin translation
+}
+
+function __TranslateTitle(generator: TGenerator): TGenResult;
+begin
+  __TranslateTitle.is_ok   := True;
+  __TranslateTitle.err     := geNONE;
+  __TranslateTitle.err_msg := '';
+end;
+
+function __TranslateHeader(generator: TGenerator; header: String): TGenResult;
+begin
+  __TranslateHeader.is_ok   := True;
+  __TranslateHeader.err     := geNONE;
+  __TranslateHeader.err_msg := '';
+end;
+
+function __TranslateSubHeader(generator: TGenerator; header: String): TGenResult;
+begin
+  __TranslateSubHeader.is_ok   := True;
+  __TranslateSubHeader.err     := geNONE;
+  __TranslateSubHeader.err_msg := '';
+end;
+
+function __TranslateSection(generator: TGenerator; section: TSection): TGenResult;
+begin
+  __TranslateSection.is_ok   := True;
+  __TranslateSection.err     := geNONE;
+  __TranslateSection.err_msg := '';
+end;
+
+function __TranslateSource(generator: TGenerator): TGenResult;
+begin
+  __TranslateSource.is_ok   := True;
+  __TranslateSource.err     := geNONE;
+  __TranslateSource.err_msg := '';
+
+  __TranslateSource.value := generator.template.output_format.prefix_text;
+
+  __TranslateSource := __TranslateTitle(generator);
+  if not __TranslateSource.is_ok then
+    exit;
+
+  __TranslateSource := __TranslateSection(generator, generator.source.root_section);
+  if not __TranslateSource.is_ok then
+    exit;
+
+  __TranslateSource.value := generator.template.output_format.postfix_text;
+end;
 
 { --- Public Functions --- }
 
@@ -78,6 +131,8 @@ begin
                               );
     exit;
   end;
+
+  GenerateSingle := __TranslateSource(generator);
 end;
 
 end.
