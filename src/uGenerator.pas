@@ -40,6 +40,7 @@ function GenerateSingle(const src: String; const template_src: String; const out
 var
   generator: TGenerator;
   template_res: TTemplateResult;
+  translate_res: TTranslateResult;
 begin
   GenerateSingle.is_ok   := True;
   GenerateSingle.err     := geNONE;
@@ -66,7 +67,7 @@ begin
 
   Assign(generator.source.doc_file, src);
   ReSet(generator.source.doc_file);
-  if not ParseStructure(generator.source) then
+  if not uSADParser.ParseStructure(generator.source) then
   begin
     GenerateSingle.is_ok   := False;
     GenerateSingle.err     := geSRC_PARSING_ERROR;
@@ -79,7 +80,13 @@ begin
     exit;
   end;
 
-  GenerateSingle := __TranslateSource(generator);
+  generator.options.auto_break := True;
+
+  translate_res := uTranslator.TranslateSource(generator);
+  GenerateSingle.is_ok   := translate_res.is_ok;
+  GenerateSingle.err     := TRANSLATE_TO_GEN_ERRORS[translate_res.err];
+  GenerateSingle.err_msg := translate_res.err_msg;
+  GenerateSingle.value   := translate_res.value;
 end;
 
 end.

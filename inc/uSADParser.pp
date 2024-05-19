@@ -41,6 +41,7 @@ interface
     PSADocument = ^TSADocument;
 
     TSection = record
+      starting_line   : Integer;
       owning_document : PSADocument;
       name            : String;
       children        : array of TSection;
@@ -321,6 +322,11 @@ implementation
         SetupSection(tmp_section, split_line[1]);
         tmp_section.owning_document := @ADocument;
         AddSectionChild(section_path[HIGH(section_path)]^, tmp_section);
+
+        { fpc-sitegen specific! }
+        section_path[HIGH(section_path)]^.contents :=
+                    section_path[HIGH(section_path)]^.contents +
+                    '$$SECTION_START$$';
 
         { Update Section-Path }
         SetLength(section_path, Length(section_path)+1);

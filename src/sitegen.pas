@@ -23,7 +23,10 @@ begin
   res := uGenerator.GenerateSingle(SOURCE, TEMPLATE, DESTINATION); 
 
   if res.is_ok then
+  begin
+    writeln(res.value);
     halt;
+  end;
 
   writeln('Generation Error: ', res.err);
   writeln('==> ', res.err_msg);
