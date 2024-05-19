@@ -7,7 +7,7 @@ interface
 uses StrUtils, SysUtils, Types, uSADParser, uShared;
 
 type
-  TTranslateError = (treNONE, treUNKNOWN, treINVALID_SYNTAX);
+  TTranslateError = (treNONE, treUNKNOWN, treINVALID_SYNTAX, treSECTION_START_OVERFLOW);
 
   TTranslateResult = record
     is_ok   : Boolean;
@@ -21,18 +21,19 @@ type
   for TranslateSource (whose job is to begin translation
 }
 
-function TranslateHeader(generator: TGenerator; header: String): TTranslateResult;
-function TranslateSubHeader(generator: TGenerator; header: String): TTranslateResult;
-function TranslateSection(generator: TGenerator; section: TSection): TTranslateResult;
+function TranslateHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
+function TranslateSubHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
+function TranslateSection(generator: TGenerator; section: TSection; value: String): TTranslateResult;
 function TranslateSource(generator: TGenerator): TTranslateResult;
 
 implementation
 
-function TranslateHeader(generator: TGenerator; header: String): TTranslateResult;
+function TranslateHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
 begin
   TranslateHeader.is_ok   := True;
   TranslateHeader.err     := treNONE;
   TranslateHeader.err_msg := '';
+  TranslateHeader.value   := value;
 
   TranslateHeader.value := TranslateHeader.value +
                            generator.template.head_format.prefix_text +
@@ -40,11 +41,12 @@ begin
                            generator.template.head_format.postfix_text;
 end;
 
-function TranslateSubHeader(generator: TGenerator; header: String): TTranslateResult;
+function TranslateSubHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
 begin
   TranslateSubHeader.is_ok   := True;
   TranslateSubHeader.err     := treNONE;
   TranslateSubHeader.err_msg := '';
+  TranslateSubHeader.value   := value;
 
   TranslateSubHeader.value := TranslateSubHeader.value +
                               generator.template.sub_head_format.prefix_text +
@@ -52,7 +54,7 @@ begin
                               generator.template.sub_head_format.postfix_text;
 end;
 
-function TranslateSection(generator: TGenerator; section: TSection): TTranslateResult;
+function TranslateSection(generator: TGenerator; section: TSection; value: String): TTranslateResult;
 const
   SECTION_NAME_MARKER = '$$SECTION_NAME$$';
   SECTION_START_MARKER = '$$SECTION_START$$';
@@ -66,6 +68,7 @@ begin
   TranslateSection.is_ok   := True;
   TranslateSection.err     := treNONE;
   TranslateSection.err_msg := '';
+  TranslateSection.value   := value;
 
   prefix := StringReplace(generator.template.section_format.prefix_text,
                           SECTION_NAME_MARKER, section.name, [rfReplaceAll]);
@@ -96,7 +99,18 @@ begin
                                       generator.template.text_format.postfix_text;
           end;
 
-          TranslateSection := TranslateSection(generator, section.children[child_ix]);
+          if child_ix >= Length(section.children) then
+          begin
+            TranslateSection.is_ok   := False;
+            TranslateSection.err     := treSECTION_START_OVERFLOW;
+            TranslateSection.err_msg := 'a section-start marker was encountered eventhough all' +
+                                        'sections have been inserted!';
+            exit;
+          end;
+
+          TranslateSection := TranslateSection(generator, section.children[child_ix],
+                                               TranslateSection.value);
+          inc(child_ix);
           if not TranslateSection.is_ok then
             exit;
         end;
@@ -112,7 +126,7 @@ begin
           TranslateSection := TranslateHeader(generator, MergeStringArray(
                                 Copy(words, word_ix+1, Length(words)-1),
                                 ' '
-                              ));
+                              ), TranslateSection.value);
           if not TranslateSection.is_ok then
             exit;
 
@@ -130,7 +144,7 @@ begin
           TranslateSection := TranslateSubHeader(generator, MergeStringArray(
                                 Copy(words, word_ix+1, Length(words)-1),
                                 ' '
-                              ));
+                              ), TranslateSection.value);
           if not TranslateSection.is_ok then
             exit;
 
@@ -170,7 +184,8 @@ begin
 
   TranslateSource.value := generator.template.output_format.prefix_text;
 
-  TranslateSource := TranslateSection(generator, generator.source.root_section);
+  TranslateSource := TranslateSection(generator, generator.source.root_section,
+                                      TranslateSource.value);
   if not TranslateSource.is_ok then
     exit;
 
