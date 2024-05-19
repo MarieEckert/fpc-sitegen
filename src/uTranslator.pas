@@ -33,6 +33,11 @@ begin
   TranslateHeader.is_ok   := True;
   TranslateHeader.err     := treNONE;
   TranslateHeader.err_msg := '';
+
+  TranslateHeader.value := TranslateHeader.value +
+                           generator.template.head_format.prefix_text +
+                           header +
+                           generator.template.head_format.postfix_text;
 end;
 
 function TranslateSubHeader(generator: TGenerator; header: String): TTranslateResult;
@@ -40,6 +45,11 @@ begin
   TranslateSubHeader.is_ok   := True;
   TranslateSubHeader.err     := treNONE;
   TranslateSubHeader.err_msg := '';
+
+  TranslateSubHeader.value := TranslateSubHeader.value +
+                              generator.template.sub_head_format.prefix_text +
+                              header +
+                              generator.template.sub_head_format.postfix_text;
 end;
 
 function TranslateSection(generator: TGenerator; section: TSection): TTranslateResult;
