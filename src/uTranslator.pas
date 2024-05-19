@@ -57,7 +57,7 @@ const
   SECTION_NAME_MARKER = '$$SECTION_NAME$$';
   SECTION_START_MARKER = '$$SECTION_START$$';
 var
-  nline, nword, child_ix: Integer;
+  nline, word_ix, child_ix: Integer;
   prefix, cline, _word: String;
   lines, words: TStringDynArray;
 
@@ -83,9 +83,9 @@ begin
 
     words := SplitString(lines[nline], ' ');
 
-    for nword := 0 to Length(words) - 1 do
+    for word_ix := 0 to Length(words) - 1 do
     begin
-      _word := words[nword];
+      _word := words[word_ix];
 
       case _word of
         SECTION_START_MARKER: begin
@@ -110,7 +110,7 @@ begin
           end;
 
           TranslateSection := TranslateHeader(generator, MergeStringArray(
-                                Copy(words, nword+1, Length(words)-1),
+                                Copy(words, word_ix+1, Length(words)-1),
                                 ' '
                               ));
           if not TranslateSection.is_ok then
@@ -128,7 +128,7 @@ begin
           end;
 
           TranslateSection := TranslateSubHeader(generator, MergeStringArray(
-                                Copy(words, nword+1, Length(words)-1),
+                                Copy(words, word_ix+1, Length(words)-1),
                                 ' '
                               ));
           if not TranslateSection.is_ok then
