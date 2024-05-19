@@ -23,7 +23,7 @@ fi
 
     str source 'src/sitegen.pas'
     
-    list str targets 'debug', 'release'
+    list str targets 'debug', 'release', 'clean'
     str default 'debug'
   end
 end
@@ -48,4 +48,9 @@ $(/config/scripts/compile_command) -O4 -XX -Xs
 mv $(%target_objdir%)/sitegen $(%target_objdir%)..
 '
   end
+
+  section clean
+    str exec '#!/bin/bash
+rm -rf $(/config/files/build_root)
+$(/config/scripts/directories)'
 end
