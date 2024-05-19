@@ -64,7 +64,7 @@ const
   SECTION_START_MARKER = '$$SECTION_START$$';
 var
   nline, word_ix, child_ix: Integer;
-  prefix, cline, _word: String;
+  prefix, _word: String;
   lines, words: TStringDynArray;
 
   in_text: Boolean;
