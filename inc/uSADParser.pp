@@ -326,7 +326,7 @@ implementation
         { fpc-sitegen specific! }
         section_path[HIGH(section_path)]^.contents :=
                     section_path[HIGH(section_path)]^.contents +
-                    '$$SECTION_START$$';
+                    '$$SECTION_START$$ ';
 
         { Update Section-Path }
         SetLength(section_path, Length(section_path)+1);
