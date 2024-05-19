@@ -47,7 +47,7 @@ const
   SECTION_NAME_MARKER = '$$SECTION_NAME$$';
   SECTION_START_MARKER = '$$SECTION_START$$';
 var
-  nline, child_ix: Integer;
+  nline, nword, child_ix: Integer;
   prefix, cline, _word: String;
   lines, words: TStringDynArray;
 
@@ -73,8 +73,10 @@ begin
 
     words := SplitString(lines[nline], ' ');
 
-    for _word in words do
+    for nword := 0 to Length(words) - 1 do
     begin
+      _word := words[nword];
+
       case _word of
         SECTION_START_MARKER: begin
           if in_text then
@@ -87,6 +89,42 @@ begin
           TranslateSection := TranslateSection(generator, section.children[child_ix]);
           if not TranslateSection.is_ok then
             exit;
+        end;
+        HEADER: begin
+          { TODO: How to properly de-duplicate this code? }
+          if in_text then
+          begin
+            in_text := False;
+            TranslateSection.value := TranslateSection.value +
+                                      generator.template.text_format.postfix_text;
+          end;
+
+          TranslateSection := TranslateHeader(generator, MergeStringArray(
+                                Copy(words, nword+1, Length(words)-1),
+                                ' '
+                              ));
+          if not TranslateSection.is_ok then
+            exit;
+
+          break;
+        end;
+        SUB_HEADER: begin
+          { TODO: How to properly de-duplicate this code? }
+          if in_text then
+          begin
+            in_text := False;
+            TranslateSection.value := TranslateSection.value +
+                                      generator.template.text_format.postfix_text;
+          end;
+
+          TranslateSection := TranslateSubHeader(generator, MergeStringArray(
+                                Copy(words, nword+1, Length(words)-1),
+                                ' '
+                              ));
+          if not TranslateSection.is_ok then
+            exit;
+
+          break;
         end;
         { regular text }
         else begin
