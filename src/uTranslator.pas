@@ -22,8 +22,10 @@ type
 }
 
 function TranslateHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
-function TranslateSubHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
-function TranslateSection(generator: TGenerator; section: TSection; value: String): TTranslateResult;
+function TranslateSubHeader(generator: TGenerator; header: String; value: String)
+                           : TTranslateResult;
+function TranslateSection(generator: TGenerator; section: TSection; value: String)
+                         : TTranslateResult;
 function TranslateSource(generator: TGenerator): TTranslateResult;
 
 implementation
@@ -41,7 +43,8 @@ begin
                            generator.template.head_format.postfix_text;
 end;
 
-function TranslateSubHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
+function TranslateSubHeader(generator: TGenerator; header: String; value: String)
+                           : TTranslateResult;
 begin
   TranslateSubHeader.is_ok   := True;
   TranslateSubHeader.err     := treNONE;
@@ -54,7 +57,8 @@ begin
                               generator.template.sub_head_format.postfix_text;
 end;
 
-function TranslateSection(generator: TGenerator; section: TSection; value: String): TTranslateResult;
+function TranslateSection(generator: TGenerator; section: TSection; value: String)
+                         : TTranslateResult;
 const
   SECTION_NAME_MARKER = '$$SECTION_NAME$$';
   SECTION_START_MARKER = '$$SECTION_START$$';
