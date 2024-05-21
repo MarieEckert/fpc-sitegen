@@ -19,7 +19,7 @@ output-format:
 <html>
   <head>
     <title> $$DOCUMENT_TITLE$$ </title>
-    <link rel="stylesheet" type="text/css" src="example.css" />
+    <link rel="stylesheet" type="text/css" href="example.css" />
   </head>
   <body>
     <div id="content"> 
