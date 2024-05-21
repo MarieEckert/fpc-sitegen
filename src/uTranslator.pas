@@ -8,7 +8,7 @@ uses StrUtils, SysUtils, Types, uSADParser, uShared;
 
 type
   TTranslateError = (treNONE, treUNKNOWN, treINVALID_SYNTAX, treSECTION_START_OVERFLOW,
-                     treDISALLOWED_SWITCH);
+                     treDISALLOWED_SWITCH, treMISSING_SWITCH_PARAMETER);
 
 { These types may be needed if the $reset switch is allowed. }
 {
@@ -73,15 +73,18 @@ function TranslateSection(generator: TGenerator; section: TSection; value: Strin
 const
   SECTION_NAME_MARKER = '$$SECTION_NAME$$';
   SECTION_START_MARKER = '$$SECTION_START$$';
+  SECTION_END_MARKER = '$$SECTION_END$$';
 var
-  nline, word_ix, child_ix: Integer;
-  prefix, _word: String;
+  nline, word_ix, child_ix, tmp_ix: Integer;
+  skip: Integer; { how many words should be skipped? }
+
+  prefix, _word, tmp: String;
   lines, words: TStringDynArray;
 
   { counters for $color and $style switches }
   color_count, style_count: Integer;
 
-  in_text: Boolean;
+  ended, in_text: Boolean;
 begin
   TranslateSection.is_ok   := True;
   TranslateSection.err     := treNONE;
@@ -94,9 +97,12 @@ begin
 
   lines := SplitString(section.contents, sLineBreak);
 
-  in_text := False;
   child_ix := 0;
+  color_count := 0;
+  style_count := 0;
+  in_text := False;
 
+  ended := False;
   for nline := 0 to Length(lines) - 1 do
   begin
     if Length(lines[nline]) < 1 then
@@ -104,8 +110,14 @@ begin
 
     words := SplitString(lines[nline], ' ');
 
+    skip := 0; { NOTE: This /could/ cause problems but is there to prevent problems }
     for word_ix := 0 to Length(words) - 1 do
     begin
+      if skip > 0 then
+      begin
+        dec(skip);
+        continue;
+      end;
       _word := words[word_ix];
 
       case _word of
@@ -132,6 +144,10 @@ begin
           if not TranslateSection.is_ok then
             exit;
         end;
+        SECTION_END_MARKER: begin
+          ended := True;
+          break;
+        end;
         HEADER: begin
           { TODO: How to properly de-duplicate this code? }
           if in_text then
@@ -152,9 +168,47 @@ begin
         end;
         COLOR: begin
           inc(color_count);
+          if word_ix >= Length(words) then
+          begin
+            TranslateSection.is_ok   := False;
+            TranslateSection.err     := treMISSING_SWITCH_PARAMETER;
+            TranslateSection.err_msg := 'color switch is missing its parameter!';
+            exit;
+          end;
+
+          { TODO: DEDUPLICATE }
+          if not in_text then
+          begin
+            in_text := True;
+            TranslateSection.value := TranslateSection.value +
+                                      generator.template.text_format.prefix_text;
+          end;
+
+          tmp := Copy(words[word_ix+1], 1, Length(words[word_ix+1]) - 1);
+          TranslateSection.value := TranslateSection.value + '<span class="color-' + tmp + '">';
+          inc(skip);
         end;
         STYLE: begin
           inc(style_count);
+          if word_ix >= Length(words) then
+          begin
+            TranslateSection.is_ok   := False;
+            TranslateSection.err     := treMISSING_SWITCH_PARAMETER;
+            TranslateSection.err_msg := 'style switch is missing its parameter!';
+            exit;
+          end;
+
+          { TODO: DEDUPLICATE }
+          if not in_text then
+          begin
+            in_text := True;
+            TranslateSection.value := TranslateSection.value +
+                                      generator.template.text_format.prefix_text;
+          end;
+
+          tmp := Copy(words[word_ix+1], 1, Length(words[word_ix+1]) - 1);
+          TranslateSection.value := TranslateSection.value + '<span class="style-' + tmp + '">';
+          inc(skip);
         end;
         RESET_: begin
           TranslateSection.is_ok   := False;
@@ -163,6 +217,10 @@ begin
           exit;
         end;
         RESET_ALL: begin
+          for tmp_ix := 0 to style_count + color_count - 1 do
+          begin
+            TranslateSection.value := TranslateSection.value + '</span>'
+          end;
         end;
         SUB_HEADER: begin
           { TODO: How to properly de-duplicate this code? }
@@ -200,8 +258,12 @@ begin
       TranslateSection.value := TranslateSection.value + '<br>';
 
     TranslateSection.value := TranslateSection.value + sLineBreak;
+    if ended then
+      break;
   end;
 
+  if in_text then
+    TranslateSection.value := TranslateSection.value + generator.template.text_format.postfix_text;
   TranslateSection.value := TranslateSection.value +
                             generator.template.section_format.postfix_text;
 end;

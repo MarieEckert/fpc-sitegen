@@ -173,7 +173,7 @@ implementation
     sec: TSection;
   begin
     path_split := SplitString(APath, ':');
-    
+
     curr_sec := @ADocument.root_section;
     for elem in path_split do
     begin
@@ -350,6 +350,11 @@ implementation
           parse_error := 'Cannot end section outside of a section';
           exit;
         end;
+
+        { fpc-sitegen specific! }
+        section_path[HIGH(section_path)]^.contents :=
+                    section_path[HIGH(section_path)]^.contents +
+                    '$$SECTION_END$$ ';
 
         SetLength(section_path, HIGH(section_path));
         {curr_section := section_path[HIGH(section_path)];}
