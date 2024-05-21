@@ -10,15 +10,24 @@ type
   TGenError = (geNONE, geUNKNOWN, geSRC_NOT_FOUND, geTEMPLATE_NOT_FOUND, geSRC_PARSING_ERROR,
                geTEMPLATE_PARSING_ERROR, geTRANSLATION_ERROR, geTEMPLATE_INCOMPLETE);
 
+  TGenElement = record
+    src      : String;
+    template : String;
+    out      : String;
+  end;
+
+  TGenElementDynArray = array of TGenElement;
+
   TGenResult = record
     is_ok   : Boolean;
     err     : TGenError;
     err_msg : String;
-    value   : String;
   end;
 
 function GenerateSingle(const src: String; const template_src: String; const out: String)
                        : TGenResult;
+
+function GenerateMultiple(const elements: TGenElementDynArray): TGenResult;
 
 const
   TEMPLATE_TO_GEN_ERRORS: array[TTemplateError] of TGenError = (
@@ -41,6 +50,7 @@ var
   generator: TGenerator;
   template_res: TTemplateResult;
   translate_res: TTranslateResult;
+  output_file: TextFile;
 begin
   GenerateSingle.is_ok   := True;
   GenerateSingle.err     := geNONE;
@@ -80,14 +90,33 @@ begin
     exit;
   end;
 
-  generator.options.auto_break := True;
+  generator.options.auto_break := False;
   generator.options.preserve_mode := pmSTYLE;
 
   translate_res := uTranslator.TranslateSource(generator);
   GenerateSingle.is_ok   := translate_res.is_ok;
   GenerateSingle.err     := TRANSLATE_TO_GEN_ERRORS[translate_res.err];
   GenerateSingle.err_msg := translate_res.err_msg;
-  GenerateSingle.value   := translate_res.value;
+
+  if not GenerateSingle.is_ok then
+    exit;
+
+  Assign(output_file, out);
+  ReWrite(output_file);
+  Write(output_file, translate_res.value);
+  Close(output_file);
+end;
+
+function GenerateMultiple(const elements: TGenElementDynArray): TGenResult;
+var
+  element: TGenElement;
+begin
+  for element in elements do
+  begin
+    GenerateMultiple := GenerateSingle(element.src, element.template, element.out);
+    if not GenerateMultiple.is_ok then
+      break;
+  end;
 end;
 
 end.

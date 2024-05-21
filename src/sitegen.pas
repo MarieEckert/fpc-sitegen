@@ -24,7 +24,6 @@ begin
 
   if res.is_ok then
   begin
-    writeln(res.value);
     halt;
   end;
 
