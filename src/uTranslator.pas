@@ -41,6 +41,31 @@ function TranslateSource(generator: TGenerator): TTranslateResult;
 
 implementation
 
+{ --- Private Procedures --- }
+
+procedure __TextGuard(var in_text: Boolean; const checktype: Boolean;
+                      constref generator: TGenerator; var res: TTranslateResult);
+begin
+  if checktype then
+  begin
+    if in_text then
+    begin
+      in_text := False;
+      res.value := res.value + generator.template.text_format.postfix_text;
+    end;
+
+    exit;
+  end;
+
+  if not in_text then
+  begin
+    in_text := True;
+    res.value := res.value + generator.template.text_format.prefix_text;
+  end;
+end;
+
+{ --- Public Functions --- }
+
 function TranslateHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
 begin
   TranslateHeader.is_ok   := True;
@@ -122,13 +147,7 @@ begin
 
       case _word of
         SECTION_START_MARKER: begin
-          if in_text then
-          begin
-            in_text := False;
-            TranslateSection.value := TranslateSection.value +
-                                      generator.template.text_format.postfix_text;
-          end;
-
+          __TextGuard(in_text, True, generator, TranslateSection);
           if child_ix >= Length(section.children) then
           begin
             TranslateSection.is_ok   := False;
@@ -149,13 +168,7 @@ begin
           break;
         end;
         HEADER: begin
-          { TODO: How to properly de-duplicate this code? }
-          if in_text then
-          begin
-            in_text := False;
-            TranslateSection.value := TranslateSection.value +
-                                      generator.template.text_format.postfix_text;
-          end;
+          __TextGuard(in_text, True, generator, TranslateSection);
 
           TranslateSection := TranslateHeader(generator, MergeStringArray(
                                 Copy(words, word_ix+1, Length(words)-1),
@@ -176,13 +189,7 @@ begin
             exit;
           end;
 
-          { TODO: DEDUPLICATE }
-          if not in_text then
-          begin
-            in_text := True;
-            TranslateSection.value := TranslateSection.value +
-                                      generator.template.text_format.prefix_text;
-          end;
+          __TextGuard(in_text, False, generator, TranslateSection);
 
           tmp := Copy(words[word_ix+1], 1, Length(words[word_ix+1]) - 1);
           TranslateSection.value := TranslateSection.value + '<span class="color-' + tmp + '">';
@@ -198,13 +205,7 @@ begin
             exit;
           end;
 
-          { TODO: DEDUPLICATE }
-          if not in_text then
-          begin
-            in_text := True;
-            TranslateSection.value := TranslateSection.value +
-                                      generator.template.text_format.prefix_text;
-          end;
+          __TextGuard(in_text, False, generator, TranslateSection);
 
           tmp := Copy(words[word_ix+1], 1, Length(words[word_ix+1]) - 1);
           TranslateSection.value := TranslateSection.value + '<span class="style-' + tmp + '">';
@@ -223,13 +224,7 @@ begin
           end;
         end;
         SUB_HEADER: begin
-          { TODO: How to properly de-duplicate this code? }
-          if in_text then
-          begin
-            in_text := False;
-            TranslateSection.value := TranslateSection.value +
-                                      generator.template.text_format.postfix_text;
-          end;
+          __TextGuard(in_text, True, generator, TranslateSection);
 
           TranslateSection := TranslateSubHeader(generator, MergeStringArray(
                                 Copy(words, word_ix+1, Length(words)-1),
@@ -242,13 +237,7 @@ begin
         end;
         { regular text }
         else begin
-          if not in_text then
-          begin
-            in_text := True;
-            TranslateSection.value := TranslateSection.value +
-                                      generator.template.text_format.prefix_text;
-          end;
-
+          __TextGuard(in_text, False, generator, TranslateSection);
           TranslateSection.value := TranslateSection.value + _word + ' ';
         end;
       end;
