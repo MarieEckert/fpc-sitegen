@@ -25,7 +25,7 @@ const
     geNONE, geTEMPLATE_NOT_FOUND, geTEMPLATE_PARSING_ERROR, geTEMPLATE_INCOMPLETE, geUNKNOWN
   );
   TRANSLATE_TO_GEN_ERRORS: array[TTranslateError] of TGenError = (
-    geNONE, geUNKNOWN, geTRANSLATION_ERROR, geUNKNOWN
+    geNONE, geUNKNOWN, geTRANSLATION_ERROR, geUNKNOWN, geTRANSLATION_ERROR
   );
 
 implementation
@@ -81,6 +81,7 @@ begin
   end;
 
   generator.options.auto_break := True;
+  generator.options.preserve_mode := pmSTYLE;
 
   translate_res := uTranslator.TranslateSource(generator);
   GenerateSingle.is_ok   := translate_res.is_ok;

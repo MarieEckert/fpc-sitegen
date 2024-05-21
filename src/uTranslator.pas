@@ -7,7 +7,18 @@ interface
 uses StrUtils, SysUtils, Types, uSADParser, uShared;
 
 type
-  TTranslateError = (treNONE, treUNKNOWN, treINVALID_SYNTAX, treSECTION_START_OVERFLOW);
+  TTranslateError = (treNONE, treUNKNOWN, treINVALID_SYNTAX, treSECTION_START_OVERFLOW,
+                     treDISALLOWED_SWITCH);
+
+{ These types may be needed if the $reset switch is allowed. }
+{
+  TStyleProperty = record
+    is_color : Boolean;
+    name     : String;
+  end;
+
+  TStylePropertyDynArray = array of TStyleProperty;
+}
 
   TTranslateResult = record
     is_ok   : Boolean;
@@ -66,6 +77,9 @@ var
   nline, word_ix, child_ix: Integer;
   prefix, _word: String;
   lines, words: TStringDynArray;
+
+  { counters for $color and $style switches }
+  color_count, style_count: Integer;
 
   in_text: Boolean;
 begin
@@ -135,6 +149,20 @@ begin
             exit;
 
           break;
+        end;
+        COLOR: begin
+          inc(color_count);
+        end;
+        STYLE: begin
+          inc(style_count);
+        end;
+        RESET_: begin
+          TranslateSection.is_ok   := False;
+          TranslateSection.err     := treDISALLOWED_SWITCH;
+          TranslateSection.err_msg := 'the $reset switch is currently not allowed!';
+          exit;
+        end;
+        RESET_ALL: begin
         end;
         SUB_HEADER: begin
           { TODO: How to properly de-duplicate this code? }
