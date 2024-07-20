@@ -31,7 +31,7 @@ uses uGenerator;
 
 const
   PROGRAM_NAME = 'fpc-sitegen';
-  PROGRAM_VERSION = '0.1';
+  PROGRAM_VERSION = '1.0';
   DEFAULT_TEMPLATE_PATH = 'data/template.sgt';
 
 function __Handle_Arg(const ix: Integer; var dest: String; const name: String): Integer;
