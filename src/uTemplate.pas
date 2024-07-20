@@ -1,5 +1,12 @@
 unit uTemplate;
 
+{
+  fpc-sitegen -- A more featured replacement for sadhtml
+
+  Copyright (c) 2024, Marie Eckert
+  Licensed under the BSD 3-Clause License.
+}
+
 {$H+}
 
 interface

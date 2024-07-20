@@ -1,5 +1,12 @@
 unit uGenerator;
 
+{
+  fpc-sitegen -- A more featured replacement for sadhtml
+
+  Copyright (c) 2024, Marie Eckert
+  Licensed under the BSD 3-Clause License.
+}
+
 {$H+}
 
 interface
@@ -26,8 +33,6 @@ type
 
 function GenerateSingle(const src: String; const template_src: String; const out: String)
                        : TGenResult;
-
-function GenerateMultiple(const elements: TGenElementDynArray): TGenResult;
 
 const
   TEMPLATE_TO_GEN_ERRORS: array[TTemplateError] of TGenError = (
@@ -110,18 +115,6 @@ begin
   ReWrite(output_file);
   Write(output_file, translate_res.value);
   Close(output_file);
-end;
-
-function GenerateMultiple(const elements: TGenElementDynArray): TGenResult;
-var
-  element: TGenElement;
-begin
-  for element in elements do
-  begin
-    GenerateMultiple := GenerateSingle(element.src, element.template, element.out);
-    if not GenerateMultiple.is_ok then
-      break;
-  end;
 end;
 
 end.
