@@ -10,7 +10,7 @@ program sitegen;
     fpc-sitegen [-i <input file>] [-o <output file>] [additional options]
 
   ABOUT
-  fpc-sitgen takes in a simple-ansi-document (see https://github.com/FelixEcker/sad) and a
+  fpc-sitegen takes in a simple-ansi-document (see https://github.com/FelixEcker/sad) and a
   .sgt (sitegen template) to generate a final document.
 
   Templates define formatting for every kind of SAD switch, see data/template.sgt for a simple

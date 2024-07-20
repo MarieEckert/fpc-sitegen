@@ -35,7 +35,7 @@ sector targets
     str exec '#!/bin/bash
 $(/config/scripts/directories)
 $(/config/scripts/compile_command) -g -dDEBUG
-mv $(%target_objdir%)/sitegen $(%target_objdir%)..
+mv $(%target_objdir%)/sitegen $(%target_objdir%)../fpc-sitegen
     '
   end
 
@@ -45,7 +45,7 @@ mv $(%target_objdir%)/sitegen $(%target_objdir%)..
     str exec '#!/bin/bash
 $(/config/scripts/directories)
 $(/config/scripts/compile_command) -O4 -XX -Xs
-mv $(%target_objdir%)/sitegen $(%target_objdir%)..
+mv $(%target_objdir%)/sitegen $(%target_objdir%)../fpc-sitegen
 '
   end
 
