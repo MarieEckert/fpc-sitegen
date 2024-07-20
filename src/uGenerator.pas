@@ -67,7 +67,7 @@ begin
 
   generator.template := template_res.value;
 
-  if not FileExists(src) then
+  if (not FileExists(src)) and (Length(src) > 0) then
   begin
     GenerateSingle.is_ok   := False;
     GenerateSingle.err     := geSRC_NOT_FOUND;
@@ -75,8 +75,13 @@ begin
     exit;
   end;
 
-  Assign(generator.source.doc_file, src);
-  ReSet(generator.source.doc_file);
+  if Length(src) > 0 then
+  begin
+    Assign(generator.source.doc_file, src);
+    ReSet(generator.source.doc_file);
+  end else
+    generator.source.doc_file := Input;
+
   if not uSADParser.ParseStructure(generator.source) then
   begin
     GenerateSingle.is_ok   := False;

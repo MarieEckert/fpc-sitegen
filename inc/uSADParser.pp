@@ -210,11 +210,13 @@ implementation
     and (ADocument.preserve_mode <> COLOR) then
       ADocument.preserve_mode := '';
 
-    if TTextRec(ADocument.doc_file).Handle = 0 then
-    begin
-      parse_error := 'No TextFile assigned to ADocument.doc_file!';
-      exit;
-    end;
+    { DISABLED FOR FPC-SITEGEN
+      if TTextRec(ADocument.doc_file).Handle = 0 then
+      begin
+        parse_error := 'No TextFile assigned to ADocument.doc_file!';
+        exit;
+      end;
+    }
 
     { The section_path holds the internal indexes of the sections we are
       currently in }
