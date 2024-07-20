@@ -17,6 +17,10 @@ program sitegen;
   example of a template to convert to HTML.
 
   OPTIONS
+    -i <input file>
+      Specify the input file. If not set, fpc-sitegen will read from STDIN.
+    -o <output file>
+      Specify the output file. If not set, fpc-sitegen will read from STDERR.
     -t <template file>
       Specify the template to be used for generation
 }
@@ -35,8 +39,8 @@ begin
   __Handle_Arg := 0;
   if ix + 1 > ParamCount then
   begin
-    writeln('Argument Error');
-    writeln('==> Missing filename for argument "', name,'"');
+    writeln(stderr, 'Argument Error');
+    writeln(stderr, '==> Missing filename for argument "', name,'"');
     halt(1);
   end;
 
@@ -54,12 +58,12 @@ end;
 
 procedure ShowHelp;
 begin
-  writeln('usage: fpc-sitgen [-i <input file>] [-o <output file>] [additional options]');
+  writeln(stderr, 'usage: fpc-sitgen [-i <input file>] [-o <output file>] [additional options]');
   writeln;
-  writeln('OPTIONS');
-  writeln('  -i <input file>    Path to the input, if not given STDIN will be used');
-  writeln('  -o <output file>   Path to the output, if not given STDOUT will be used');
-  writeln('  -t <template file> Path to the template, if not given "', DEFAULT_TEMPLATE_PATH,
+  writeln(stderr, 'OPTIONS');
+  writeln(stderr, '  -i <input file>    Path to the input, if not given STDIN will be used');
+  writeln(stderr, '  -o <output file>   Path to the output, if not given STDOUT will be used');
+  writeln(stderr, '  -t <template file> Path to the template, if not given "', DEFAULT_TEMPLATE_PATH,
           '" will be used');
   writeln;
   halt;
@@ -94,8 +98,8 @@ begin
     else if (curr_arg = '-?') or (curr_arg = '-h') then
       ShowHelp
     else begin
-      writeln('Argument Error');
-      writeln('==> Invalid argument "', curr_arg, '"');
+      writeln(stderr, 'Argument Error');
+      writeln(stderr, '==> Invalid argument "', curr_arg, '"');
       halt(1);
     end;
   end;
@@ -116,7 +120,7 @@ begin
     halt;
   end;
 
-  writeln('Generation Error: ', res.err);
-  writeln('==> ', res.err_msg);
+  writeln(stderr, 'Generation Error: ', res.err);
+  writeln(stderr, '==> ', res.err_msg);
   halt(1);
 end.
