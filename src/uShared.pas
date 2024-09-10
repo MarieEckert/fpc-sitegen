@@ -16,8 +16,10 @@ uses uTemplate, uSADParser;
 type
   TPreserveMode = (pmCOLOR, pmSTYLE);
 
+  TAutoBreakMode = (abmOFF, abmLF, abmEL, abmINVALID);
+
   TGeneratorOptions = record
-    auto_break    : Boolean; { True: automatically inserts <br> tags on line-breaks }
+    auto_break    : TAutoBreakMode;
     preserve_mode : TPreserveMode;
   end;
 
@@ -27,5 +29,22 @@ type
     options  : TGeneratorOptions;
   end;
 
+function StrToAutoBreakMode(_str: String): TAutoBreakMode;
+
 implementation
+
+function StrToAutoBreakMode(_str: String): TAutoBreakMode;
+begin
+  _str := LowerCase(_str);
+
+  if _str = 'off' then
+    exit(abmOFF);
+  if _str = 'lf' then
+    exit(abmLF);
+  if _str = 'el' then
+    exit(abmEL);
+
+  exit(abmINVALID);
+end;
+
 end.

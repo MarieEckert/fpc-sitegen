@@ -135,10 +135,19 @@ begin
   in_text := False;
 
   ended := False;
+
   for nline := 0 to Length(lines) - 1 do
   begin
     if Length(lines[nline]) < 1 then
+    begin
+      if in_text
+      and (
+           (generator.options.auto_break = abmEL)
+        or (generator.options.auto_break = abmLF)
+      ) then
+        TranslateSection.value := TranslateSection.value + '<br>';
       continue;
+    end;
 
     words := SplitString(lines[nline], ' ');
 
@@ -250,7 +259,7 @@ begin
       end;
     end;
 
-    if in_text and generator.options.auto_break then
+    if in_text and (generator.options.auto_break = abmLF) then
       TranslateSection.value := TranslateSection.value + '<br>';
 
     TranslateSection.value := TranslateSection.value + sLineBreak;
@@ -260,6 +269,7 @@ begin
 
   if in_text then
     TranslateSection.value := TranslateSection.value + generator.template.text_format.postfix_text;
+
   TranslateSection.value := TranslateSection.value +
                             generator.template.section_format.postfix_text;
 end;

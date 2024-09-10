@@ -230,11 +230,12 @@ implementation
       inc(ADocument.line_number);
       readln(ADocument.doc_file, ADocument.current_line);
 
-      if (Length(ADocument.current_line) = 0)
-      or (Trim(ADocument.current_line) = '') then
-        continue;
-
-      split_line := SplitString(ADocument.current_line, ' ');
+      if (Length(ADocument.current_line) = 0) then
+      begin
+        SetLength(split_line, 1);
+        split_line[0] := '';
+      end else
+        split_line := SplitString(ADocument.current_line, ' ');
 
       case split_line[0] of
       DEFINE_META: begin

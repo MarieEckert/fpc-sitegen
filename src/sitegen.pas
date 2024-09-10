@@ -23,16 +23,30 @@ program sitegen;
       Specify the output file. If not set, fpc-sitegen will read from STDERR.
     -t <template file>
       Specify the template to be used for generation
+    -b <mode>
+      Automatically insert a html br tag
+      mode can be:
+        * lf : Causes the tag to be inserted after every linefeed
+        * el : Causes the tag to be inserted at every empty line
 }
 
 {$H+}
 
-uses uGenerator;
+uses uGenerator, uShared;
 
 const
   PROGRAM_NAME = 'fpc-sitegen';
-  PROGRAM_VERSION = '1.0';
+  PROGRAM_VERSION = '1.1';
   DEFAULT_TEMPLATE_PATH = 'data/template.sgt';
+
+type
+  TCliArgs = record
+    input_path    : String;
+    output_path   : String;
+    template_path : String;
+
+    generator_options : TGeneratorOptions;
+  end;
 
 function __Handle_Arg(const ix: Integer; var dest: String; const name: String): Integer;
 begin
@@ -65,16 +79,24 @@ begin
   writeln(stderr, '  -o <output file>   Path to the output, if not given STDOUT will be used');
   writeln(stderr, '  -t <template file> Path to the template, if not given "', DEFAULT_TEMPLATE_PATH,
           '" will be used');
+  writeln(stderr, '  -a <mode> Automatically insert a html br tag.');
+  writeln(stderr, '      mode can be: lf (to insert on every linefeed), el (to insert on every ',
+          'empty line)');
   writeln;
   halt;
 end;
 
-procedure ParseArguments(var input_path: String; var output_path: String;
-                         var template_path: String);
+function ParseArguments: TCliArgs;
 var
   ix, skip: Integer;
-  curr_arg: String;
+  curr_arg, autobreak_tmp: String;
 begin
+  ParseArguments.input_path    := '';
+  ParseArguments.output_path   := '';
+  ParseArguments.template_path := DEFAULT_TEMPLATE_PATH;
+
+  autobreak_tmp := 'off';
+
   skip := 0;
 
   for ix := 1 to ParamCount do
@@ -88,11 +110,13 @@ begin
     curr_arg := ParamStr(ix);
 
     if curr_arg = '-i' then
-      skip := __Handle_Arg(ix, input_path, '-i')
+      skip := __Handle_Arg(ix, ParseArguments.input_path, '-i')
     else if curr_arg = '-o' then
-      skip := __Handle_Arg(ix, output_path, '-o')
+      skip := __Handle_Arg(ix, ParseArguments.output_path, '-o')
     else if curr_arg = '-t' then
-      skip := __Handle_Arg(ix, template_path, '-o')
+      skip := __Handle_Arg(ix, ParseArguments.template_path, '-t')
+    else if (curr_arg = '-a') then
+      skip := __Handle_arg(ix, autobreak_tmp, '-a')
     else if curr_arg = '-V' then
       ShowVersion
     else if (curr_arg = '-?') or (curr_arg = '-h') then
@@ -103,17 +127,26 @@ begin
       halt(1);
     end;
   end;
+
+  ParseArguments.generator_options.preserve_mode := pmSTYLE;
+  ParseArguments.generator_options.auto_break    := StrToAutoBreakMode(autobreak_tmp);
+
+  if ParseArguments.generator_options.auto_break = abmINVALID then
+  begin
+    writeln(stderr, 'Argument Error');
+    writeln(stderr, '==> Invalid auto break mode "', autobreak_tmp, '"');
+    halt(1);
+  end;
 end;
 
 var
   res: TGenResult;
-  input_path, output_path, template_path: String;
+  args: TCliArgs;
 begin
-  template_path := DEFAULT_TEMPLATE_PATH;
+  args := ParseArguments;
 
-  ParseArguments(input_path, output_path, template_path);
-
-  res := uGenerator.GenerateSingle(input_path, template_path, output_path); 
+  res := uGenerator.GenerateSingle(args.input_path, args.template_path, args.output_path,
+                                   args.generator_options);
 
   if res.is_ok then
   begin

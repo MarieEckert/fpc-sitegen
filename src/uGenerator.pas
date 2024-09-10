@@ -31,7 +31,8 @@ type
     err_msg : String;
   end;
 
-function GenerateSingle(const src: String; const template_src: String; const out: String)
+function GenerateSingle(const src: String; const template_src: String; const out: String;
+                        const opts: TGeneratorOptions)
                        : TGenResult;
 
 const
@@ -49,7 +50,8 @@ implementation
 
 { --- Public Functions --- }
 
-function GenerateSingle(const src: String; const template_src: String; const out: String)
+function GenerateSingle(const src: String; const template_src: String; const out: String;
+                        const opts: TGeneratorOptions)
                        : TGenResult;
 var
   generator: TGenerator;
@@ -57,6 +59,8 @@ var
   translate_res: TTranslateResult;
   output_file: TextFile;
 begin
+  generator.options := opts;
+
   GenerateSingle.is_ok   := True;
   GenerateSingle.err     := geNONE;
   GenerateSingle.err_msg := '';
@@ -99,9 +103,6 @@ begin
                               );
     exit;
   end;
-
-  generator.options.auto_break := False;
-  generator.options.preserve_mode := pmSTYLE;
 
   translate_res := uTranslator.TranslateSource(generator);
   GenerateSingle.is_ok   := translate_res.is_ok;
