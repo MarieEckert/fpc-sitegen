@@ -10,11 +10,11 @@ program sitegen;
     fpc-sitegen [-i <input file>] [-o <output file>] [additional options]
 
   ABOUT
-  fpc-sitegen takes in a simple-ansi-document (see https://github.com/FelixEcker/sad) and a
-  .sgt (sitegen template) to generate a final document.
+    fpc-sitegen takes in a simple-ansi-document (see https://github.com/FelixEcker/sad) and a
+    .sgt (sitegen template) to generate a final document.
 
-  Templates define formatting for every kind of SAD switch, see data/template.sgt for a simple
-  example of a template to convert to HTML.
+    Templates define formatting for every kind of SAD switch, see data/template.sgt for a simple
+    example of a template to convert to HTML.
 
   OPTIONS
     -i <input file>
@@ -23,7 +23,7 @@ program sitegen;
       Specify the output file. If not set, fpc-sitegen will read from STDERR.
     -t <template file>
       Specify the template to be used for generation
-    -b <mode>
+    -a <mode>
       Automatically insert a html br tag
       mode can be:
         * lf : Causes the tag to be inserted after every linefeed
