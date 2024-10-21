@@ -1,0 +1,255 @@
+{$start}
+{$title} LF06 25. April 2024
+
+{$begin-section} übungsaufgaben-unternehmensformen
+{$head} Übungsaufgaben zu den Unternehmensformen
+{$begin-section} AG
+{$sub-head} Akitengesellschaft
+{$begin-section} 1
+{$sub-head} Aufgabe 1
+{$style italic} Erklären Sie, in welcher wirtschaftlichen Situation die Gründung
+einer Aktiengesellschaft aus Ihrer Sicht sinnvoll sein könnte. {$reset-all}
+
+Die Gründung einer Aktiengesellschaft kann sinnvoll sein, 
+um großes Kapital von Investoren zu beschaffen und das Haftungsrisiko 
+der Unternehmer zu begrenzen.
+{$end-section}
+{$begin-section} 2
+{$sub-head} Aufgabe 2
+a) Wie viele Gründungsmitglieder sind notwendig?
+   1
+b) Wie hoch muss das Grundkapital einer Aktiengesellschaft bei der Gründung
+   mindestens sein?
+   50.000 €
+c) Welchen Mindestbetrag (Nennwert) muss eine Aktie haben?
+   1 €
+d) Welche Bedeutung/Funktion hat die Aktie für den Aktionär?
+   Bei der Jahreshauptversammlung wird eine festsumme pro Aktie an die Aktionäre
+   ausgezahlt.
+e) Zu welchem genauen Zeitpunkt entsteht eine Aktiengesellschaft?
+   Zu dem Zeitpunkt wo sie im Handelsregister eingetragen wird
+{$end-section}
+{$begin-section} 3
+{$sub-head} Aufgabe 3
+{$style italic} Welche Informationen über die AG werden im Handelsregister eingetragen? {$reset-all}
+- Firma (Name des Unternehmens)
+- Namen und Geburtsdaten der Geschäftsführung.
+- Sitz, Niederlassungen und Zweigniederlassungen mit Angabe der jeweiligen Anschrift.
+{$end-section}
+{$begin-section} 4
+{$sub-head} Aufgabe 4
+{$style italic} Als Firmennamen für die neue AG schlägt Herr Pfiffig "Pfiffig
+Hörer & Co." vor. Nehmen Sie dazu Stellung. {$reset-all}
+
+Der Firmenname muss noch die Rechtsform entahlten (also AG)
+{$end-section}
+{$begin-section} 5
+{$sub-head} Aufgabe 5
+{$style italic} Erklären Sie die Haftung bei einer AG. Welches Risiko besteht
+für den Aktionär? {$reset-all}
+
+Der Aktionär hat nur das Risiko, dass er all sein ivestiertes Geld verliert, da
+die AG mit ihrem gesamten Kapital haften muss.
+{$end-section}
+{$begin-section} 6
+{$sub-head} Aufgabe 6
+{$style italic} Die gesetzliche vorgeschriebene Organe einer Aktiengesellschaft
+sind der Vorstand, der Aufsichtsrat und die Hauptversammlung. Wer "bestellt" den
+Vorstand? {$reset-all}
+
+Der Aufsichtsrat.
+{$end-section}
+{$begin-section} 7
+{$sub-head} Aufgabe 7
+{$style italic} Welche Aufgaben übernimmt der Vorstand einer AG? {$reset-all}
+
+Der Vorstand einer Aktiengesellschaft führt das Unternehmen strategisch, 
+entwickelt langfristige Ziele und managt die finanziellen Angelegenheiten.
+{$end-section}
+{$begin-section} 8
+{$sub-head} Aufgabe 8
+{$style italic} Erklären Sie die wesentlichen Aufgaben des Aufsichtsrates einer
+AG. {$reset-all}
+
+Der Aufsichtsrat einer Aktiengesellschaft überwacht und kontrolliert die Geschäftsführung 
+des Vorstands, prüft die Unternehmensstrategie, überwacht die Einhaltung von 
+Gesetzen und Vorschriften, wählt und kontrolliert den Vorstand, 
+und vertritt die Interessen der Aktionäre.
+{$end-section}
+{$begin-section} 9
+{$sub-head} Aufgabe 9
+{$style italic} Was ist die Hauptversammlung einer Aktiengesellschaft? {$reset-all}
+
+Die Hauptversammlung einer Aktiengesellschaft ist ein Treffen der Aktionäre, 
+bei dem wichtige Entscheidungen über das Unternehmen getroffen werden, 
+wie die Wahl des Aufsichtsrats und die Genehmigung von Jahresabschlüssen
+{$end-section}
+{$begin-section} 10
+{$sub-head} Aufgabe 10
+{$style italic} Nennen Sie wesentliche Aufgaben bzw. Rechte der Hauptversammlung. {$reset-all}
+
+1. Wahl des Aufsichtsrats und des Abschlussprüfers.
+2. Genehmigung des Jahresabschlusses und der Verwendung des Bilanzgewinns.
+3. Beschlussfassung über Dividendenzahlungen.
+4. Änderungen der Satzung.
+5. Entlastung von Vorstand und Aufsichtsrat.
+{$end-section}
+{$begin-section} 11
+{$sub-head} Aufgabe 11
+{$style italic} Erklären Sie den Begriff "Dividende". {$reset-all}
+
+Die Dividende ist ein Teil des Gewinns, den eine Aktiengesellschaft an ihre Aktionäre ausschüttet.
+{$end-section}
+{$end-section}
+{$begin-section} gmbh
+{$sub-head} GmbH
+{$begin-section} 1
+{$sub-head} Aufgabe 1
+a) Reichen drei Personen für die Gründung einer GmbH aus?
+   Ja
+b) Wie hoch muss das Stammkapital einer GmbH, das von den Gründern in das
+   Unternehmen eingebracht wird, mindestens sein?
+   25.000 €
+c) Gibt es eine gesetzliche Vorschrift, in welcher Form der Gesellschaftsvertrag
+   aufgestellt werden muss?
+   Ja, es muss ein notariell beurkundeter Vertrag sein.
+d) Zu welchem genauen Zeitpunkt entsteht die GmbH?
+   Zu der Eintragung in das Handelsregister.
+{$end-section}
+{$begin-section} 2
+{$sub-head} Aufgabe 2
+Seine bedenken sind nicht wirklich berechtigt, da bei der GmbH nicht die
+Gesellschafter mit ihrem Privatvermögen haften, sondern die GmbH mit ihrem
+Stammkapital.
+{$end-section}
+{$begin-section} 3
+{$sub-head} Aufgabe 3
+a) Wer bestellt den oder die Geschäftsführer einer GmbH?
+   Die Geschäftsführer einer GmbH werden entweder im Gesellschaftsvertrag oder 
+   durch einen Beschluss der Gesellschafterversammlung bestellt.
+b) Welche rechtliche Stellung haben die Geschäftsführer gegenüber der Unternehmung?
+   Die Geschäftsführer einer GmbH sind rechtlich als Vertreter der Gesellschaft 
+   verantwortlich für die Geschäftsführung und die Umsetzung der Unternehmensziele.
+{$end-section}
+{$begin-section} 4
+{$sub-head} Aufgabe 4
+Die Einzelgeschäftsführung bedeutet, dass jeder Geschäftsführer eigenständig handelt, 
+während bei der Gesamtgeschäftsführung alle Geschäftsführer gemeinsam handeln müssen. 
+Für die Einzelgeschäftsführung spricht, dass Entscheidungen schneller getroffen werden können,
+während bei der Gesamtgeschäftsführung eine höhere Kontrolle und gemeinsame Verantwortung besteht,
+was zu konsistenteren Entscheidungen führen kann.
+{$end-section}
+{$begin-section} 5
+{$sub-head} Aufgabe 5
+{$style italic} Nennen Sie weitere Aufgaben der Gesellschaftsversammlung {$reset-all}
+
+1. Beschlussfassung über die Entlastung der Geschäftsführer und des Aufsichtsrats.
+2. Änderungen am Gesellschaftsvertrag.
+3. Genehmigung von außergewöhnlichen Geschäften oder Maßnahmen.
+4. Entscheidungen über die Verwendung von Gewinnen oder Verlusten.
+5. Bestellung oder Abberufung von Geschäftsführern und Aufsichtsratsmitgliedern.
+6. Auflösung oder Umwandlung der GmbH.
+7. Erteilung von Weisungen an die Geschäftsführung
+{$end-section}
+{$begin-section} 6
+{$sub-head} Aufgabe 6
+{$style italic} Bleibt noch die letzte Frage: "Was macht die GmbH als
+Unternehmensform eigentlich so erfolgreich?" {$reset-all}
+
+Die GmbH ist erfolgreich, da sie eine beschränkte Haftung für Gesellschafter
+bietet und gleichzeitig Flexibilität bei der Geschäftsführung ermöglicht.
+{$end-section}
+{$end-section}
+{$begin-section} einzelunternehmung
+{$sub-head} Einzelunternehmung
+{$begin-section} 1
+{$sub-head} Aufgabe 1
+{$style italic} Sein eigener "Herr und Meister" zu sein und sich selbständig zu
+machen hat sicherlich Vor- und nachteile. Welche Vor- und Nachteile fallen Ihnen
+ein? {$reset-all}
+
+Selbstständigkeit bietet die Möglichkeit, eigene Ideen umzusetzen, 
+flexible Arbeitszeiten zu haben und die Kontrolle über das Unternehmen zu behalten. 
+Auf der anderen Seite können jedoch finanzielle Unsicherheit, Arbeitsbelastung 
+und das Risiko des Scheiterns Nachteile sein.
+{$end-section}
+{$begin-section} 2
+{$sub-head} Aufgabe 2
+1. Firmenname und Rechtsform des Unternehmens.
+2. Sitz und ggf. Zweigniederlassungen.
+3. Angaben zu den vertretungsberechtigten Personen (z. B. Name und Wohnort des Einzelunternehmers).
+4. Gegenstand des Unternehmens.
+5. Datum der Eintragung und Registerart (Hauptregister oder Nebenregister).
+{$end-section}
+{$end-section}
+{$begin-section} ohg
+{$sub-head} Offene Handelsgesellschaft
+{$begin-section} 1
+{$sub-head} Aufgabe 1
+
+Er sollte ein gewisses Eigenkapital haben um haften zu können und nicht mit der
+OHG in konkurenz stehen.
+{$end-section}
+{$begin-section} 2
+{$sub-head} Aufgabe 2
+
+Durch Geschäftsbeginn, spätestens zur Eintragung ins Handelsregister.
+{$end-section}
+{$begin-section} 3
+{$sub-head} Aufgabe 3
+
+Ebenfalls zur Eintragung ins Handelsregister, also am 3. April.
+{$end-section}
+{$begin-section} 4
+{$sub-head} Aufgabe 4
+
+Herr Noll liegt hier im Recht, da die Befugnisse durch den Vertrag eingeschränkt
+wurden.
+{$end-section}
+{$begin-section} 5
+{$sub-head} Aufgabe 5
+
+Herr Noll liegt hier nicht im Recht, da die Befugnisse durch den Vertrag eingeschränkt
+wurden.
+{$end-section}
+{$begin-section} 6
+{$sub-head} Aufgabe 6
+
+Noll     = .4 * 400,000
+Ravens   = .4 * 200,000
+Abzug    = Noll + Ravens = 24,000
+Restumme = 72,000 - Abzug = 72,000 - 24,000 = 48,000
+
+Noll   = Restumme / 2 + Noll   = 16,000 + 24,000 = 40,000 €
+Ravens = Restumme / 2 + Ravens =  8,000 + 24,000 = 32,000 €
+{$end-section}
+{$begin-section} 7
+{$sub-head} Aufgabe 7
+
+Aufgrund der Verlustverteilung nach Köpfen, muss er die Hälfte tragen.
+{$end-section}
+{$begin-section} 8
+{$sub-head} Aufgabe 8
+
+Die Gesellschafter haften mit allem und sofort.
+{$end-section}
+{$begin-section} 9
+{$sub-head} Aufgabe 9
+
+Durch die Hafftung der Gesellschafter, kann man immer sein Geld wiederholen
+{$end-section}
+{$end-section}
+{$begin-section} kg
+{$sub-head} Kommanditgesellschaft
+{$begin-section} 1
+{$sub-head} Aufgabe 1
+
+Die Komplementäre haftet voll, der Kommanditist nur mit seiner Kapitaleinlage
+{$end-section}
+{$begin-section} 2
+{$sub-head} Aufgabe 2
+
+Garnicht, die Komplementäre übernehmen die Geschäftsführung.
+{$end-section}
+{$end-section}
+{$end-section}

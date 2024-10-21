@@ -42,6 +42,7 @@ interface
 
     TSection = record
       starting_line   : Integer;
+      is_root         : Boolean;
       owning_document : PSADocument;
       name            : String;
       children        : array of TSection;
@@ -108,6 +109,7 @@ implementation
   begin
     ASection.name := AName;
     ASection.contents := '';
+    ASection.is_root := False;
     SetLength(ASection.children, 0);
   end;
 
@@ -205,6 +207,7 @@ implementation
     ADocument.line_number  := 0;
     SetupSection(ADocument.root_section, '.');
     ADocument.root_section.owning_document := @ADocument;
+    ADocument.root_section.is_root := True;
 
     if (ADocument.preserve_mode <> STYLE)
     and (ADocument.preserve_mode <> COLOR) then
