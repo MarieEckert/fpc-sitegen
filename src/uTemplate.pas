@@ -176,9 +176,16 @@ begin
   res.section_format.prefix_text := tmp[0];
   res.section_format.postfix_text := tmp[1];
 
-  tmp := SplitString(raw.root_section_format, CONTENT_MARKER);
-  res.root_section_format.prefix_text := tmp[0];
-  res.root_section_format.postfix_text := tmp[1];
+  if Length(raw.root_section_format) > 0 then
+  begin
+    tmp := SplitString(raw.root_section_format, CONTENT_MARKER);
+    res.root_section_format.prefix_text := tmp[0];
+    res.root_section_format.postfix_text := tmp[1];
+  end else
+  begin
+    res.root_section_format.prefix_text := res.section_format.prefix_text;
+    res.root_section_format.postfix_text := res.section_format.postfix_text;
+  end;
 
   tmp := SplitString(raw.output_format, CONTENT_MARKER);
   res.output_format.prefix_text := tmp[0];
