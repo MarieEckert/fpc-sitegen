@@ -110,7 +110,7 @@ var
   nline, word_ix, child_ix, tmp_ix: Integer;
   skip: Integer; { how many words should be skipped? }
 
-  prefix, _word, tmp: String;
+  prefix, postfix, _word, tmp: String;
   lines, words: TStringDynArray;
 
   { counters for $color and $style switches }
@@ -123,8 +123,13 @@ begin
   TranslateSection.err_msg := '';
   TranslateSection.value   := value;
 
-  prefix := StringReplace(generator.template.section_format.prefix_text,
-                          SECTION_NAME_MARKER, section.name, [rfReplaceAll]);
+  if section.is_root then
+    prefix := generator.template.root_section_format.prefix_text
+  else
+    prefix := generator.template.section_format.prefix_text;
+
+  prefix := StringReplace(prefix, SECTION_NAME_MARKER, section.name, [rfReplaceAll]);
+
   TranslateSection.value := TranslateSection.value + prefix;
 
   lines := SplitString(section.contents, sLineBreak);
@@ -270,8 +275,12 @@ begin
   if in_text then
     TranslateSection.value := TranslateSection.value + generator.template.text_format.postfix_text;
 
-  TranslateSection.value := TranslateSection.value +
-                            generator.template.section_format.postfix_text;
+  if section.is_root then
+    postfix := generator.template.root_section_format.postfix_text
+  else
+    postfix := generator.template.section_format.postfix_text;
+
+  TranslateSection.value := TranslateSection.value + postfix;
 end;
 
 function TranslateSource(generator: TGenerator): TTranslateResult;

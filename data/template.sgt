@@ -13,6 +13,10 @@ section-format:
 <div id="section-$$SECTION_NAME$$">
   $$CONTENT$$
 </div>
+root-section-format:
+<div id="root">
+  $$CONTENT$$
+</div>
 output-format:
 <!DOCTYPE html>
 <!-- fpc-sitegen template -->

@@ -28,26 +28,28 @@ type
   end;
 
   TTemplate = record
-    title_format    : TTemplateFormat;
-    head_format     : TTemplateFormat;
-    sub_head_format : TTemplateFormat;
-    text_format     : TTemplateFormat;
-    section_format  : TTemplateFormat;
+    title_format        : TTemplateFormat;
+    head_format         : TTemplateFormat;
+    sub_head_format     : TTemplateFormat;
+    text_format         : TTemplateFormat;
+    section_format      : TTemplateFormat;
+    root_section_format : TTemplateFormat;
 
     { Final format for outputting the finished parsed text }
-    output_format   : TTemplateFormat;
+    output_format       : TTemplateFormat;
   end;
 
   {
     Contains the unprocessed format definitions
   }
   TRawTemplate = record
-    title_format    : String;
-    head_format     : String;
-    sub_head_format : String;
-    text_format     : String;
-    section_format  : String;
-    output_format   : String;
+    title_format        : String;
+    head_format         : String;
+    sub_head_format     : String;
+    text_format         : String;
+    root_section_format : String;
+    section_format      : String;
+    output_format       : String;
   end;
 
   TTemplateResult = record
@@ -58,14 +60,14 @@ type
   end;
 
   TParseState = (psNONE, psTITLE_FORMAT, psHEAD_FORMAT, psSUB_HEAD_FORMAT, psTEXT_FORMAT,
-                 psSECTION_FORMAT, psOUTPUT_FORMAT, psERROR);
+                 psSECTION_FORMAT, psROOT_SECTION_FORMAT, psOUTPUT_FORMAT, psERROR);
 
 function Parse(const src: String): TTemplateResult;
 
 const
   labels: array[TParseState] of string = (
     '?', 'title-format:', 'head-format:', 'sub-head-format:', 'text-format:', 'section-format:',
-    'output-format:', '?'
+    'root-section-format:', 'output-format:', '?'
   );
 
 implementation
@@ -118,6 +120,8 @@ begin
       raw_template.text_format := raw_template.text_format + cline + slinebreak;
     psSECTION_FORMAT:
       raw_template.section_format := raw_template.section_format + cline + slinebreak;
+    psROOT_SECTION_FORMAT:
+      raw_template.root_section_format := raw_template.root_section_format + cline + slinebreak;
     psOUTPUT_FORMAT:
       raw_template.output_format := raw_template.output_format + cline + slinebreak;
     psERROR:
@@ -171,6 +175,17 @@ begin
   tmp := SplitString(raw.section_format, CONTENT_MARKER);
   res.section_format.prefix_text := tmp[0];
   res.section_format.postfix_text := tmp[1];
+
+  if Length(raw.root_section_format) > 0 then
+  begin
+    tmp := SplitString(raw.root_section_format, CONTENT_MARKER);
+    res.root_section_format.prefix_text := tmp[0];
+    res.root_section_format.postfix_text := tmp[1];
+  end else
+  begin
+    res.root_section_format.prefix_text := res.section_format.prefix_text;
+    res.root_section_format.postfix_text := res.section_format.postfix_text;
+  end;
 
   tmp := SplitString(raw.output_format, CONTENT_MARKER);
   res.output_format.prefix_text := tmp[0];
