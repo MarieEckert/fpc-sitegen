@@ -17,6 +17,8 @@ program sitegen;
     example of a template to convert to HTML.
 
   OPTIONS
+    -V
+      Print the version and exit.
     -i <input file>
       Specify the input file. If not set, fpc-sitegen will read from STDIN.
     -o <output file>
@@ -36,7 +38,7 @@ uses uGenerator, uShared;
 
 const
   PROGRAM_NAME = 'fpc-sitegen';
-  PROGRAM_VERSION = '1.1';
+  PROGRAM_VERSION = '1.2';
   DEFAULT_TEMPLATE_PATH = 'data/template.sgt';
 
 type
@@ -75,6 +77,7 @@ begin
   writeln(stderr, 'usage: fpc-sitgen [-i <input file>] [-o <output file>] [additional options]');
   writeln;
   writeln(stderr, 'OPTIONS');
+  writeln(stderr, '  -V                 Print the version and exit');
   writeln(stderr, '  -i <input file>    Path to the input, if not given STDIN will be used');
   writeln(stderr, '  -o <output file>   Path to the output, if not given STDOUT will be used');
   writeln(stderr, '  -t <template file> Path to the template, if not given "', DEFAULT_TEMPLATE_PATH,
