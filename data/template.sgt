@@ -1,6 +1,3 @@
-# fpc-sitegen example template
-# labels (e.g. head-format) can be taken as plain-text when prefixed with a back-slash
-
 title-format:
 <div class="title-format"> $$CONTENT$$ </div>
 head-format:

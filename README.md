@@ -25,3 +25,29 @@ fpc-sitegen [-i <input file>] [-o <output file>] [additional options]
 -t <template file>
     Specify the template to be used for generation
 ```
+
+## Templates
+The custom template format is really simple, it is split up into several smaller
+format blocks marked with labels. These blocks are:
+
+* `title-format` – Format for contents of the `title` switch
+* `head-format` – Format for contents of the `head` switch
+* `sub-head-format` – Format for the contents of the `sub-head` switch
+* `text-format` – Format for text contents of a section
+* `section-format` – Format for sections
+* `root-section-format` – Format for the (implicitly created) root-section
+* `output-format` – Base format around the actual contents
+
+A format block is started using the name of the block followed by a colon, e.g.
+`title-format:`. Blocks end when another label is encountered or when the
+template ends.
+
+There are also a few default "markers" which can be insereted within a format.
+By far the most important being the `$$CONTENT$$` marker, which inserts the
+expected content.
+
+**NOTE:** This marker can only be used *once* per format.
+
+Other markers which are supported are:
+* `$$DOCUMENT_TITLE$$` – The title of the document, as set with the `title` switch
+* `$$SECTION_NAME$$` – The name of the current section
