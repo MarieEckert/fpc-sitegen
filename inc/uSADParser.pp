@@ -93,7 +93,7 @@ interface
     SUB_HEADER     = '{$sub-head}';
     STYLE          = '{$style';
     COLOR          = '{$color';
-    RESET_         = '{$reset}';
+    RESET_ONE      = '{$reset}';
     RESET_ALL      = '{$reset-all}';
 
     { Styling Constants }
@@ -435,7 +435,7 @@ implementation
 
           skip := 1;
         end;
-        RESET_: begin
+        RESET_ONE: begin
           ParseSection := ParseSection + STYLE_RESET;
 
           if last_look_switch = ASection.owning_document^.preserve_mode then

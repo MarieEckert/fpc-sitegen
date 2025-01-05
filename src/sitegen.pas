@@ -38,7 +38,7 @@ uses uGenerator, uShared;
 
 const
   PROGRAM_NAME = 'fpc-sitegen';
-  PROGRAM_VERSION = '1.2';
+  PROGRAM_VERSION = '1.3';
   DEFAULT_TEMPLATE_PATH = 'data/template.sgt';
 
 type

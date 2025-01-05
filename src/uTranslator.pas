@@ -15,17 +15,7 @@ uses StrUtils, SysUtils, Types, uSADParser, uShared;
 
 type
   TTranslateError = (treNONE, treUNKNOWN, treINVALID_SYNTAX, treSECTION_START_OVERFLOW,
-                     treDISALLOWED_SWITCH, treMISSING_SWITCH_PARAMETER);
-
-{ These types may be needed if the $reset switch is allowed. }
-{
-  TStyleProperty = record
-    is_color : Boolean;
-    name     : String;
-  end;
-
-  TStylePropertyDynArray = array of TStyleProperty;
-}
+                     treDISALLOWED_SWITCH, treMISSING_SWITCH_PARAMETER, treGENERIC_SWITCH);
 
   TTranslateResult = record
     is_ok   : Boolean;
@@ -36,7 +26,7 @@ type
 
 {
   All Translate functions are intended to append to TTranslateResult.value, except
-  for TranslateSource (whose job is to begin translation
+  for TranslateSource (whose job is to begin translation)
 }
 
 function TranslateHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
@@ -114,7 +104,7 @@ var
   lines, words: TStringDynArray;
 
   { counters for $color and $style switches }
-  color_count, style_count: Integer;
+  style_count: Integer;
 
   ended, in_text: Boolean;
 begin
@@ -135,7 +125,6 @@ begin
   lines := SplitString(section.contents, sLineBreak);
 
   child_ix := 0;
-  color_count := 0;
   style_count := 0;
   in_text := False;
 
@@ -200,8 +189,8 @@ begin
 
           break;
         end;
-        COLOR: begin
-          inc(color_count);
+        COLOR: begin { deprecated, should be removed in time }
+          inc(style_count);
           if word_ix >= Length(words) then
           begin
             TranslateSection.is_ok   := False;
@@ -215,6 +204,8 @@ begin
           tmp := Copy(words[word_ix+1], 1, Length(words[word_ix+1]) - 1);
           TranslateSection.value := TranslateSection.value + '<span class="color-' + tmp + '">';
           inc(skip);
+
+          writeln(stderr, 'WARNING: color switch is deprecated');
         end;
         STYLE: begin
           inc(style_count);
@@ -232,17 +223,24 @@ begin
           TranslateSection.value := TranslateSection.value + '<span class="style-' + tmp + '">';
           inc(skip);
         end;
-        RESET_: begin
-          TranslateSection.is_ok   := False;
-          TranslateSection.err     := treDISALLOWED_SWITCH;
-          TranslateSection.err_msg := 'the $reset switch is currently not allowed!';
-          exit;
+        RESET_ONE: begin
+          if style_count = 0 then
+          begin
+            TranslateSection.is_ok   := False;
+            TranslateSection.err     := treGENERIC_SWITCH;
+            TranslateSection.err_msg := 'reset switch when no styles active!';
+            exit;
+          end;
+
+          TranslateSection.value := TranslateSection.value + '</span>';
+          dec(style_count);
         end;
         RESET_ALL: begin
-          for tmp_ix := 0 to style_count + color_count - 1 do
+          for tmp_ix := 0 to style_count - 1 do
           begin
-            TranslateSection.value := TranslateSection.value + '</span>'
+            TranslateSection.value := TranslateSection.value + '</span>';
           end;
+          style_count := 0;
         end;
         SUB_HEADER: begin
           __TextGuard(in_text, True, generator, TranslateSection);
