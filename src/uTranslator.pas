@@ -90,6 +90,7 @@ begin
                               generator.template.sub_head_format.postfix_text;
 end;
 
+{ TODO: move handling for insert switch into different function }
 function TranslateSection(generator: TGenerator; section: TSection; value: String)
                          : TTranslateResult;
 const
@@ -97,11 +98,13 @@ const
   SECTION_START_MARKER = '$$SECTION_START$$';
   SECTION_END_MARKER = '$$SECTION_END$$';
 var
-  nline, word_ix, child_ix, tmp_ix: Integer;
+  nline, word_ix, child_ix, tmp_ix: LongInt;
   skip: Integer; { how many words should be skipped? }
 
-  prefix, postfix, _word, tmp: String;
+  prefix, postfix, _word, tmp, path: String;
   lines, words: TStringDynArray;
+
+  insert_file: Text;
 
   { counters for $color and $style switches }
   style_count: Integer;
@@ -253,6 +256,45 @@ begin
             exit;
 
           break;
+        end;
+        '{$insert': begin
+          if word_ix + 1 >= Length(words) then
+          begin
+            TranslateSection.is_ok   := False;
+            TranslateSection.err     := treGENERIC_SWITCH;
+            TranslateSection.err_msg := 'insert switch requires one argument (name)!';
+            exit;
+          end;
+
+          tmp := Copy(words[word_ix+1], 1, Length(words[word_ix+1]) - 1);
+          if not generator.options.file_defs.TryGetData(tmp, path) then
+          begin
+            TranslateSection.is_ok   := False;
+            TranslateSection.err     := treGENERIC_SWITCH;
+            TranslateSection.err_msg := 'no such file defined ("' + tmp + '")';
+            exit;
+          end;
+
+          if not FileExists(path) then
+          begin
+            TranslateSection.is_ok   := False;
+            TranslateSection.err     := treGENERIC_SWITCH;
+            TranslateSection.err_msg := 'no such file or directory: "' + path + '"';
+            exit;
+          end;
+
+          Assign(insert_file, path);
+          ReSet(insert_file);
+
+          while not eof(insert_file) do
+          begin
+            readln(insert_file, tmp);
+            TranslateSection.value := TranslateSection.value + tmp;
+          end;
+
+          Close(insert_file);
+
+          skip := 1;
         end;
         { regular text }
         else begin

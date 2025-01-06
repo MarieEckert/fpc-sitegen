@@ -11,22 +11,25 @@ unit uShared;
 
 interface
 
-uses uTemplate, uSADParser;
+uses fgl, uTemplate, uSADParser;
 
 type
   TPreserveMode = (pmCOLOR, pmSTYLE);
 
   TAutoBreakMode = (abmOFF, abmLF, abmEL, abmINVALID);
 
+  TStringMap = specialize TFPGMap<String, String>;
+
   TGeneratorOptions = record
     auto_break    : TAutoBreakMode;
     preserve_mode : TPreserveMode;
+    file_defs     : TStringMap;
   end;
 
   TGenerator = record
-    template : TTemplate;
-    source   : TSADocument;
-    options  : TGeneratorOptions;
+    template  : TTemplate;
+    source    : TSADocument;
+    options   : TGeneratorOptions;
   end;
 
 function StrToAutoBreakMode(_str: String): TAutoBreakMode;

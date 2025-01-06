@@ -10,6 +10,8 @@
 {$style italic} Erklären Sie, in welcher wirtschaftlichen Situation die Gründung
 einer Aktiengesellschaft aus Ihrer Sicht sinnvoll sein könnte. {$reset-all}
 
+{$insert test}
+
 Die Gründung einer Aktiengesellschaft kann sinnvoll sein, 
 um großes Kapital von Investoren zu beschaffen und das Haftungsrisiko 
 der Unternehmer zu begrenzen.

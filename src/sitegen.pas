@@ -34,7 +34,7 @@ program sitegen;
 
 {$H+}
 
-uses uGenerator, uShared;
+uses fgl, uGenerator, uShared;
 
 const
   PROGRAM_NAME = 'fpc-sitegen';
@@ -94,9 +94,10 @@ var
   ix, skip: Integer;
   curr_arg, autobreak_tmp: String;
 begin
-  ParseArguments.input_path    := '';
-  ParseArguments.output_path   := '';
-  ParseArguments.template_path := DEFAULT_TEMPLATE_PATH;
+  ParseArguments.generator_options.file_defs := TStringMap.Create;
+  ParseArguments.input_path                  := '';
+  ParseArguments.output_path                 := '';
+  ParseArguments.template_path               := DEFAULT_TEMPLATE_PATH;
 
   autobreak_tmp := 'off';
 
@@ -119,8 +120,19 @@ begin
     else if curr_arg = '-t' then
       skip := __Handle_Arg(ix, ParseArguments.template_path, '-t')
     else if (curr_arg = '-a') then
-      skip := __Handle_arg(ix, autobreak_tmp, '-a')
-    else if curr_arg = '-V' then
+      skip := __Handle_Arg(ix, autobreak_tmp, '-a')
+    else if (curr_arg = '-d') then
+    begin
+      if ix + 2 > ParamCount then
+      begin
+        writeln(stderr, 'Argument Error');
+        writeln(stderr, '==> Missing parameters for "-d", requires two: name & path');
+        halt(1);
+      end;
+
+      ParseArguments.generator_options.file_defs.Add(ParamStr(ix + 1), ParamStr(ix + 2));
+      skip := 2;
+    end else if curr_arg = '-V' then
       ShowVersion
     else if (curr_arg = '-?') or (curr_arg = '-h') then
       ShowHelp
