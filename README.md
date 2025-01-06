@@ -18,12 +18,21 @@ fpc-sitegen [-i <input file>] [-o <output file>] [additional options]
 
 ### Options
 ```
+-V
+  Print the version and exit.
 -i <input file>
-    Specify the input file. If not set, fpc-sitegen will read from STDIN.
+  Specify the input file. If not set, fpc-sitegen will read from STDIN.
 -o <output file>
-    Specify the output file. If not set, fpc-sitegen will read from STDERR.
+  Specify the output file. If not set, fpc-sitegen will read from STDERR.
 -t <template file>
-    Specify the template to be used for generation
+  Specify the template to be used for generation
+-a <mode>
+  Automatically insert a html br tag
+  mode can be:
+    * lf : Causes the tag to be inserted after every linefeed
+    * el : Causes the tag to be inserted at every empty line
+-d <name> <file>
+  Define a name associated to a file for the insert switch.
 ```
 
 ## Templates
