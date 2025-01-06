@@ -30,6 +30,8 @@ program sitegen;
       mode can be:
         * lf : Causes the tag to be inserted after every linefeed
         * el : Causes the tag to be inserted at every empty line
+    -d <name> <file>
+      Define a name associated to a file for the insert switch.
 }
 
 {$H+}
@@ -38,7 +40,7 @@ uses fgl, uGenerator, uShared;
 
 const
   PROGRAM_NAME = 'fpc-sitegen';
-  PROGRAM_VERSION = '1.3';
+  PROGRAM_VERSION = '1.4';
   DEFAULT_TEMPLATE_PATH = 'data/template.sgt';
 
 type
@@ -85,6 +87,8 @@ begin
   writeln(stderr, '  -a <mode> Automatically insert a html br tag.');
   writeln(stderr, '      mode can be: lf (to insert on every linefeed), el (to insert on every ',
           'empty line)');
+  writeln(stderr, '  -d <name> <file>');
+  writeln(stderr, '      Define a name associated to a file for the insert switch.');
   writeln;
   halt;
 end;
