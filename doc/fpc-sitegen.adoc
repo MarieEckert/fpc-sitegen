@@ -1,0 +1,78 @@
+= fpc-sitegen(1)
+Marie Eckert
+v1.4
+:doctype: manpage
+:manmanual: FPC-SITEGEN
+:mansource: FPC-SITEGEN
+:man-linkstyle: pass:[blue R < >]
+
+== Name
+
+fpc-sitegen - SAD based static site generator written in pascal.
+
+== Synposis
+
+*fpc-sitegen* [-i <input file>] [-o <output file>] [additional options]
+
+== Description
+
+fpc-sitegen takes in a simple-ansi-document (see https://github.com/FelixEcker/sad) and a
+.sgt (sitegen template) to generate a final document.
+Templates define formatting for most kinds of SAD switch. See the examples section.
+
+== Options
+
+*-i <input file>*::
+	Specify the input file. If not set, fpc-sitegen will read from STDIN.
+
+*-o <output file>*::
+	Specify the output file. If not set, fpc-sitegen will read from STDERR.
+
+*-t <template file>*::
+	Specify the template to be used for generation. If not specified, fpc-sitegen will try to load one from the path "data/template.sgt"
+	by default.
+
+*-a <mode>*::
+	Automatically insert a html br tag.
+	mode can be:
+		- lf : Causes the tag to be inserted after every linefeed
+		- el : Causes the tag to be inserted at every empty line
+
+== Example Template
+
+	title-format:
+	<div class="title-format"> $$CONTENT$$ </div>
+	head-format:
+	<div class="header"> $$CONTENT$$ </div>
+	sub-head-format:
+	<div class="sub-header"> $$CONTENT$$ </div>
+	text-format:
+	<div class="text"> $$CONTENT$$ </div>
+	section-format:
+	<div id="section-$$SECTION_NAME$$">
+	  $$CONTENT$$
+	</div>
+	root-section-format:
+	<div id="root">
+	  $$CONTENT$$
+	</div>
+	output-format:
+	<!DOCTYPE html>
+	<!-- fpc-sitegen template -->
+	<html>
+	  <head>
+		<title> $$DOCUMENT_TITLE$$ </title>
+		<link rel="stylesheet" type="text/css" href="example.css" />
+	  </head>
+	  <body>
+		<div id="content"> 
+		  $$CONTENT$$
+		</div>
+	  </body>
+	</html>
+
+
+== Copying
+
+Copyright (c) 2024, {author}. +
+This software is licensed under the BSD 3-Clause license.

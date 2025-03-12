@@ -1,0 +1,132 @@
+'\" t
+.\"     Title: fpc-sitegen
+.\"    Author: Marie Eckert
+.\" Generator: Asciidoctor 2.0.16
+.\"      Date: 2025-03-12
+.\"    Manual: FPC-SITEGEN
+.\"    Source: FPC-SITEGEN
+.\"  Language: English
+.\"
+.TH "FPC\-SITEGEN" "1" "2025-03-12" "FPC\-SITEGEN" "FPC\-SITEGEN"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.ss \n[.ss] 0
+.nh
+.ad l
+.de URL
+\fI\\$2\fP <\\$1>\\$3
+..
+.als MTO URL
+.if \n[.g] \{\
+.  mso www.tmac
+.  am URL
+.    ad l
+.  .
+.  am MTO
+.    ad l
+.  .
+.  LINKSTYLE blue R < >
+.\}
+.SH "NAME"
+fpc-sitegen \- SAD based static site generator written in pascal.
+.SH "SYNPOSIS"
+.sp
+\fBfpc\-sitegen\fP [\-i <input file>] [\-o <output file>] [additional options]
+.SH "DESCRIPTION"
+.sp
+fpc\-sitegen takes in a simple\-ansi\-document (see \c
+.URL "https://github.com/FelixEcker/sad" "" ")"
+and a
+\&.sgt (sitegen template) to generate a final document.
+Templates define formatting for most kinds of SAD switch. See the examples section.
+.SH "OPTIONS"
+.sp
+\fB\-i <input file>\fP
+.RS 4
+Specify the input file. If not set, fpc\-sitegen will read from STDIN.
+.RE
+.sp
+\fB\-o <output file>\fP
+.RS 4
+Specify the output file. If not set, fpc\-sitegen will read from STDERR.
+.RE
+.sp
+\fB\-t <template file>\fP
+.RS 4
+Specify the template to be used for generation. If not specified, fpc\-sitegen will try to load one from the path "data/template.sgt"
+by default.
+.RE
+.sp
+\fB\-a <mode>\fP
+.RS 4
+Automatically insert a html br tag.
+mode can be:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+lf : Causes the tag to be inserted after every linefeed
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+el : Causes the tag to be inserted at every empty line
+.RE
+.RE
+.SH "EXAMPLE TEMPLATE"
+.sp
+.if n .RS 4
+.nf
+.fam C
+title\-format:
+<div class="title\-format"> $$CONTENT$$ </div>
+head\-format:
+<div class="header"> $$CONTENT$$ </div>
+sub\-head\-format:
+<div class="sub\-header"> $$CONTENT$$ </div>
+text\-format:
+<div class="text"> $$CONTENT$$ </div>
+section\-format:
+<div id="section\-$$SECTION_NAME$$">
+  $$CONTENT$$
+</div>
+root\-section\-format:
+<div id="root">
+  $$CONTENT$$
+</div>
+output\-format:
+<!DOCTYPE html>
+<!\-\- fpc\-sitegen template \-\->
+<html>
+  <head>
+        <title> $$DOCUMENT_TITLE$$ </title>
+        <link rel="stylesheet" type="text/css" href="example.css" />
+  </head>
+  <body>
+        <div id="content">
+          $$CONTENT$$
+        </div>
+  </body>
+</html>
+.fam
+.fi
+.if n .RE
+.SH "COPYING"
+.sp
+Copyright (c) 2024, Marie Eckert.
+.br
+This software is licensed under the BSD 3\-Clause license.
+.SH "AUTHOR"
+.sp
+Marie Eckert
