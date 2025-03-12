@@ -1,56 +1,88 @@
 sector config
-  section files
-    str build_root 'build/'
-    str debug_dir '$(/config/files/build_root)debug/'
-    str release_dir '$(/config/files/build_root)release/'
-    str obj_dirname 'obj/'
-  end
+	section files
+		str build_root 'build/'
+		str debug_dir '$(/config/files/build_root)debug/'
+		str release_dir '$(/config/files/build_root)release/'
+		str obj_dirname 'obj/'
+		str src_file 'src/sitegen.pas'
+		str inc_dir 'inc/'
+	end
 
-  section scripts
-    str directories '
-if [[ ! -d $(/config/files/debug_dir) ]]; then
-  mkdir -p $(/config/files/debug_dir)$(/config/files/obj_dirname)
-fi
-if [[ ! -d $(/config/files/release_dir) ]]; then
-  mkdir -p $(/config/files/release_dir)$(/config/files/obj_dirname)
-fi
-'
-    str compile_command 'fpc $(/config/mariebuild/source) -FE"$(%target_objdir%)" -Fu"inc/" '
-  end
+	section mariebuild
+		u8 default_log_level 2
 
-  section mariebuild
-    str build_type 'full'
+		str build_type 'full'
 
-    str source 'src/sitegen.pas'
-    
-    list str targets 'debug', 'release', 'clean'
-    str default 'debug'
-  end
+		list str targets 'debug', 'release', 'clean'
+		str default 'debug'
+	end
 end
 
 sector targets
-  section debug
-    str target_objdir '$(/config/files/debug_dir)$(/config/files/obj_dirname)'
+	section debug
+		str target_objdir '$(/config/files/debug_dir)$(/config/files/obj_dirname)'
+		str target_flags '-g -dDEBUG'
+		list str c_rules 'compile'
+	end
 
-    str exec '#!/bin/bash
-$(/config/scripts/directories)
-$(/config/scripts/compile_command) -g -dDEBUG
-mv $(%target_objdir%)/sitegen $(%target_objdir%)../fpc-sitegen
-    '
-  end
+	section release
+		str target_objdir '$(/config/files/release_dir)$(/config/files/obj_dirname)'
+		str target_flags '-O4 -XX -Xs'
 
-  section release
-    str target_objdir '$(/config/files/release_dir)$(/config/files/obj_dirname)'
+		list str required_targets 'docs'
+		list str c_rules 'compile'
+	end
 
-    str exec '#!/bin/bash
-$(/config/scripts/directories)
-$(/config/scripts/compile_command) -O4 -XX -Xs
-mv $(%target_objdir%)/sitegen $(%target_objdir%)../fpc-sitegen
-'
-  end
+	section docs
+		list str c_rules 'manual'
+	end
 
-  section clean
-    str exec '#!/bin/bash
-rm -rf $(/config/files/build_root)
-$(/config/scripts/directories)'
+	section clean
+		str exec '#!/bin/bash
+				  rm -rf $(/config/files/build_root)
+				  $(/config/scripts/directories)
+		'
+	end
+end
+
+sector c_rules
+	section manual
+		str build_type 'full'
+
+		list str input 'fpc-sitegen'
+		str input_format 'doc/$(%element%).adoc'
+		str output_format ''
+
+		str exec '#!/bin/bash
+				  set -e
+				  COMMAND="asciidoctor -b manpage $(%input%)"
+				  echo "  $COMMAND"
+				  $COMMAND
+		'
+	end
+
+	section compile
+		str build_type 'full'
+
+		list str input ''
+		str input_format ''
+		str output_format ''
+
+		str exec '#!/bin/bash
+				  if [[ ! -d $(/config/files/debug_dir) ]]; then
+				    mkdir -p $(/config/files/debug_dir)$(/config/files/obj_dirname)
+				  fi
+				  if [[ ! -d $(/config/files/release_dir) ]]; then
+				    mkdir -p $(/config/files/release_dir)$(/config/files/obj_dirname)
+				  fi
+
+				  COMMAND="fpc -l- -v0 $(/config/files/src_file) -FE"''"$(%target_objdir%)"''" -Fu"''"$(/config/files/inc_dir)"''" $(%target_flags%)"
+				  echo "  "$COMMAND
+				  eval $COMMAND
+
+				  COMMAND="mv $(%target_objdir%)/sitegen $(%target_objdir%)../fpc-sitegen"
+				  echo "  $COMMAND"
+				  eval $COMMAND
+		'
+	end
 end
