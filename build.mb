@@ -43,6 +43,29 @@ sector targets
 				  $(/config/scripts/directories)
 		'
 	end
+
+	section install
+		str exec '#!/bin/bash
+				  set -e
+
+				  if [[ -z "${INSTALL_PREFIX}" ]]; then
+				    INSTALL_PREFIX="/usr"
+				  fi
+
+				  BINDIR="$INSTALL_PREFIX/bin"
+				  MANDIR="$INSTALL_PREFIX/share/man/man1"
+
+				  _install() {
+				    echo "  -> Installing $1"
+					COMMAND="install $2"
+					echo "      $COMMAND"
+					eval $COMMAND
+				  }
+
+				  _install "binary" "-Dm 755 ./build/release/fpc-sitegen $BINDIR/fpc-sitegen"
+				  _install "manpage" "-Dm 644 doc/fpc-sitegen.1 $MANDIR/fpc-sitegen.1"
+		'
+	end
 end
 
 sector c_rules
