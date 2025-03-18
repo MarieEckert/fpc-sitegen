@@ -11,6 +11,14 @@ diverge and may never be reconciled with the main sad repository.
 Templates define the basic formatting for certain kinds of "switches", see `data/template.sgt` for
 a simple example of a template to convert to HTML.
 
+### Prerequisites for Building
+
+fpc-sitegen requires the following programs for building:
+
+* mariebuild (build system)
+* fpc (>=3.2.2)
+* asciidoctor (optional, used for manpages)
+
 ## Usage
 ```
 fpc-sitegen [-i <input file>] [-o <output file>] [additional options]
