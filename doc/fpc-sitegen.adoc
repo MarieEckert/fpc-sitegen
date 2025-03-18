@@ -38,6 +38,9 @@ Templates define formatting for most kinds of SAD switch. See the examples secti
 		- lf : Causes the tag to be inserted after every linefeed
 		- el : Causes the tag to be inserted at every empty line
 
+*-d <name> <file>*::
+	Define a name associated to a file for the insert switch.
+
 == Example Template
 
 	title-format:
