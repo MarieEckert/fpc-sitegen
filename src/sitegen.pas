@@ -40,7 +40,7 @@ uses fgl, uGenerator, uShared;
 
 const
   PROGRAM_NAME = 'fpc-sitegen';
-  PROGRAM_VERSION = '1.4';
+  PROGRAM_VERSION = '1.5';
   DEFAULT_TEMPLATE_PATH = 'data/template.sgt';
 
 type
