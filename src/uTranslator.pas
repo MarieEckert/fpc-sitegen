@@ -289,7 +289,7 @@ begin
           while not eof(insert_file) do
           begin
             readln(insert_file, tmp);
-            TranslateSection.value := TranslateSection.value + tmp + '<br>' + sLineBreak;
+            TranslateSection.value := TranslateSection.value + tmp;
           end;
 
           Close(insert_file);
