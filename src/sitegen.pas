@@ -13,7 +13,7 @@ uses fgl, uGenerator, uShared;
 
 const
 	PROGRAM_NAME = 'fpc-sitegen';
-	PROGRAM_VERSION = '2.1';
+	PROGRAM_VERSION = '2.2';
 	DEFAULT_TEMPLATE_PATH = 'data/template.sgt';
 
 type
