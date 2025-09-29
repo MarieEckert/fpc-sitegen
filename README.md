@@ -12,7 +12,7 @@ a simple example of a template to convert to HTML.
 
 fpc-sitegen requires the following programs for building:
 
-* mariebuild (build system)
+* [optional] mariebuild (build system)
 * fpc (>=3.2.2)
 * asciidoctor (optional, used for manpages)
 
