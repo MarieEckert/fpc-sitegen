@@ -168,6 +168,8 @@ begin
 					Inc(child_ix);
 					if not TranslateSection.is_ok then
 						exit;
+
+					TranslateSection.value := TranslateSection.value + span_text;
 				end;
 				SECTION_END_MARKER: begin
 				end;
