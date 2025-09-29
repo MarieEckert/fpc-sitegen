@@ -22,7 +22,7 @@ program sitegen;
     -i <input file>
       Specify the input file. If not set, fpc-sitegen will read from STDIN.
     -o <output file>
-      Specify the output file. If not set, fpc-sitegen will read from STDERR.
+      Specify the output file. If not set, fpc-sitegen will write to STDOUT.
     -t <template file>
       Specify the template to be used for generation
     -a <mode>
@@ -76,7 +76,7 @@ end;
 
 procedure ShowHelp;
 begin
-  writeln(stderr, 'usage: fpc-sitgen [-i <input file>] [-o <output file>] [additional options]');
+  writeln(stderr, 'usage: fpc-sitegen [-i <input file>] [-o <output file>] [additional options]');
   writeln;
   writeln(stderr, 'OPTIONS');
   writeln(stderr, '  -V                 Print the version and exit');

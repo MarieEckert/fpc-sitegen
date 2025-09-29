@@ -28,7 +28,7 @@ fpc-sitegen [-i <input file>] [-o <output file>] [additional options]
 -i <input file>
   Specify the input file. If not set, fpc-sitegen will read from STDIN.
 -o <output file>
-  Specify the output file. If not set, fpc-sitegen will read from STDERR.
+  Specify the output file. If not set, fpc-sitegen will write to STDOUT.
 -t <template file>
   Specify the template to be used for generation
 -a <mode>

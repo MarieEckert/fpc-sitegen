@@ -230,8 +230,6 @@ begin
           end;
 
           Close(insert_file);
-
-          skip := 1;
         end;
         sLineBreak: Inc(empty_spaces);
         else begin
