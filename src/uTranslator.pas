@@ -164,7 +164,7 @@ begin
       end;
 
       if ((empty_spaces = 1) and (generator.options.auto_break = abmLF))
-      or ((empty_spaces = 2) and (generator.options.auto_break = abmEL)) then
+      or ((empty_spaces >= 2) and (generator.options.auto_break = abmEL)) then
         TranslateSection.value := TranslateSection.value + '<br>';
 
       case _word of
