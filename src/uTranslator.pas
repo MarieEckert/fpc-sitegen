@@ -29,7 +29,8 @@ type
   for TranslateSource (whose job is to begin translation)
 }
 
-function TranslateHeader(generator: TGenerator; header: TTextBlock; value: String): TTranslateResult;
+function TranslateHeader(
+  generator: TGenerator; header: TTextBlock; value: String): TTranslateResult;
 function TranslateSection(generator: TGenerator; section: PSection; value: String)
                          : TTranslateResult;
 function TranslateSource(generator: TGenerator): TTranslateResult;
@@ -76,7 +77,8 @@ end;
 
 { --- Public Functions --- }
 
-function TranslateHeader(generator: TGenerator; header: TTextBlock; value: String): TTranslateResult;
+function TranslateHeader(
+  generator: TGenerator; header: TTextBlock; value: String): TTranslateResult;
 const
   HEADER_LEVEL_MARKER = '$$HEADER_LEVEL$$';
 begin
@@ -177,7 +179,11 @@ begin
           end;
 
           TranslateSection.value := TranslateSection.value + '</span>';
-          TranslateSection := TranslateSection(generator, section^.children[child_ix], TranslateSection.value);
+          TranslateSection := TranslateSection(
+                                generator,
+                                section^.children[child_ix],
+                                TranslateSection.value
+                              );
 
           Inc(child_ix);
           if not TranslateSection.is_ok then
