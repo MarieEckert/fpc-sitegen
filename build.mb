@@ -5,7 +5,7 @@ sector config
 		str release_dir '$(/config/files/build_root)release/'
 		str obj_dirname 'obj/'
 		str src_file 'src/sitegen.pas'
-		str inc_dir 'inc/:sad/src/'
+		str inc_dir 'sad/src/'
 	end
 
 	section mariebuild
