@@ -70,7 +70,7 @@ begin
   __MakeStyleSpan := '<span class="text ';
 
   for style in styles do
-    __MakeStyleSpan := __MakeStyleSpan + MergeStringArray(style.args, '_') + ' ';
+    __MakeStyleSpan := __MakeStyleSpan + 'style-' + MergeStringArray(style.args, '_') + ' ';
 
   __MakeStyleSpan := Trim(__MakeStyleSpan) + '">';
 end;
