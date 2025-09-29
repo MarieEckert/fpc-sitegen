@@ -1,5 +1,5 @@
-{$start}
 {$title} LF06 25. April 2024
+{$start}
 
 {$begin-section} übungsaufgaben-unternehmensformen
 {$head} Übungsaufgaben zu den Unternehmensformen
@@ -12,8 +12,8 @@ einer Aktiengesellschaft aus Ihrer Sicht sinnvoll sein könnte. {$reset-all}
 
 {$insert test}
 
-Die Gründung einer Aktiengesellschaft kann sinnvoll sein, 
-um großes Kapital von Investoren zu beschaffen und das Haftungsrisiko 
+Die Gründung einer Aktiengesellschaft kann sinnvoll sein,
+um großes Kapital von Investoren zu beschaffen und das Haftungsrisiko
 der Unternehmer zu begrenzen.
 {$end-section}
 {$begin-section} 2
@@ -65,7 +65,7 @@ Der Aufsichtsrat.
 {$sub-head} Aufgabe 7
 {$style italic} Welche Aufgaben übernimmt der Vorstand einer AG? {$reset-all}
 
-Der Vorstand einer Aktiengesellschaft führt das Unternehmen strategisch, 
+Der Vorstand einer Aktiengesellschaft führt das Unternehmen strategisch,
 entwickelt langfristige Ziele und managt die finanziellen Angelegenheiten.
 {$end-section}
 {$begin-section} 8
@@ -73,17 +73,17 @@ entwickelt langfristige Ziele und managt die finanziellen Angelegenheiten.
 {$style italic} Erklären Sie die wesentlichen Aufgaben des Aufsichtsrates einer
 AG. {$reset-all}
 
-Der Aufsichtsrat einer Aktiengesellschaft überwacht und kontrolliert die Geschäftsführung 
-des Vorstands, prüft die Unternehmensstrategie, überwacht die Einhaltung von 
-Gesetzen und Vorschriften, wählt und kontrolliert den Vorstand, 
+Der Aufsichtsrat einer Aktiengesellschaft überwacht und kontrolliert die Geschäftsführung
+des Vorstands, prüft die Unternehmensstrategie, überwacht die Einhaltung von
+Gesetzen und Vorschriften, wählt und kontrolliert den Vorstand,
 und vertritt die Interessen der Aktionäre.
 {$end-section}
 {$begin-section} 9
 {$sub-head} Aufgabe 9
 {$style italic} Was ist die Hauptversammlung einer Aktiengesellschaft? {$reset-all}
 
-Die Hauptversammlung einer Aktiengesellschaft ist ein Treffen der Aktionäre, 
-bei dem wichtige Entscheidungen über das Unternehmen getroffen werden, 
+Die Hauptversammlung einer Aktiengesellschaft ist ein Treffen der Aktionäre,
+bei dem wichtige Entscheidungen über das Unternehmen getroffen werden,
 wie die Wahl des Aufsichtsrats und die Genehmigung von Jahresabschlüssen
 {$end-section}
 {$begin-section} 10
@@ -127,16 +127,16 @@ Stammkapital.
 {$begin-section} 3
 {$sub-head} Aufgabe 3
 a) Wer bestellt den oder die Geschäftsführer einer GmbH?
-   Die Geschäftsführer einer GmbH werden entweder im Gesellschaftsvertrag oder 
+   Die Geschäftsführer einer GmbH werden entweder im Gesellschaftsvertrag oder
    durch einen Beschluss der Gesellschafterversammlung bestellt.
 b) Welche rechtliche Stellung haben die Geschäftsführer gegenüber der Unternehmung?
-   Die Geschäftsführer einer GmbH sind rechtlich als Vertreter der Gesellschaft 
+   Die Geschäftsführer einer GmbH sind rechtlich als Vertreter der Gesellschaft
    verantwortlich für die Geschäftsführung und die Umsetzung der Unternehmensziele.
 {$end-section}
 {$begin-section} 4
 {$sub-head} Aufgabe 4
-Die Einzelgeschäftsführung bedeutet, dass jeder Geschäftsführer eigenständig handelt, 
-während bei der Gesamtgeschäftsführung alle Geschäftsführer gemeinsam handeln müssen. 
+Die Einzelgeschäftsführung bedeutet, dass jeder Geschäftsführer eigenständig handelt,
+während bei der Gesamtgeschäftsführung alle Geschäftsführer gemeinsam handeln müssen.
 Für die Einzelgeschäftsführung spricht, dass Entscheidungen schneller getroffen werden können,
 während bei der Gesamtgeschäftsführung eine höhere Kontrolle und gemeinsame Verantwortung besteht,
 was zu konsistenteren Entscheidungen führen kann.
@@ -170,9 +170,9 @@ bietet und gleichzeitig Flexibilität bei der Geschäftsführung ermöglicht.
 machen hat sicherlich Vor- und nachteile. Welche Vor- und Nachteile fallen Ihnen
 ein? {$reset-all}
 
-Selbstständigkeit bietet die Möglichkeit, eigene Ideen umzusetzen, 
-flexible Arbeitszeiten zu haben und die Kontrolle über das Unternehmen zu behalten. 
-Auf der anderen Seite können jedoch finanzielle Unsicherheit, Arbeitsbelastung 
+Selbstständigkeit bietet die Möglichkeit, eigene Ideen umzusetzen,
+flexible Arbeitszeiten zu haben und die Kontrolle über das Unternehmen zu behalten.
+Auf der anderen Seite können jedoch finanzielle Unsicherheit, Arbeitsbelastung
 und das Risiko des Scheiterns Nachteile sein.
 {$end-section}
 {$begin-section} 2

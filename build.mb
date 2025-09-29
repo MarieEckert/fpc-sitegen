@@ -5,7 +5,7 @@ sector config
 		str release_dir '$(/config/files/build_root)release/'
 		str obj_dirname 'obj/'
 		str src_file 'src/sitegen.pas'
-		str inc_dir 'inc/'
+		str inc_dir 'inc/:sad/src/'
 	end
 
 	section mariebuild
@@ -21,7 +21,7 @@ end
 sector targets
 	section debug
 		str target_objdir '$(/config/files/debug_dir)$(/config/files/obj_dirname)'
-		str target_flags '-g -dDEBUG'
+		str target_flags '-g -dDEBUG -dHaveDebug'
 		list str c_rules 'compile'
 	end
 
@@ -99,7 +99,7 @@ sector c_rules
 				    mkdir -p $(/config/files/release_dir)$(/config/files/obj_dirname)
 				  fi
 
-				  COMMAND="fpc -l- -v0 $(/config/files/src_file) -FE"''"$(%target_objdir%)"''" -Fu"''"$(/config/files/inc_dir)"''" $(%target_flags%)"
+				  COMMAND="fpc -l- -v0 $(/config/files/src_file) -FE"''"$(%target_objdir%)"''" -Fu"''"$(/config/files/inc_dir)"''" -dInsertSectionMarkers $(%target_flags%)"
 				  echo "  "$COMMAND
 				  eval $COMMAND
 

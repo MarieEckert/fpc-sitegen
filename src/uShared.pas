@@ -11,7 +11,7 @@ unit uShared;
 
 interface
 
-uses fgl, uTemplate, uSADParser;
+uses fgl, sad, uTemplate;
 
 type
   TPreserveMode = (pmCOLOR, pmSTYLE);
@@ -28,7 +28,7 @@ type
 
   TGenerator = record
     template  : TTemplate;
-    source    : TSADocument;
+    source    : sad.TDocument;
     options   : TGeneratorOptions;
   end;
 
