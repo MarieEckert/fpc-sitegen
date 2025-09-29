@@ -30,7 +30,6 @@ type
   TTemplate = record
     title_format        : TTemplateFormat;
     head_format         : TTemplateFormat;
-    sub_head_format     : TTemplateFormat;
     text_format         : TTemplateFormat;
     section_format      : TTemplateFormat;
     root_section_format : TTemplateFormat;
@@ -45,7 +44,6 @@ type
   TRawTemplate = record
     title_format        : String;
     head_format         : String;
-    sub_head_format     : String;
     text_format         : String;
     root_section_format : String;
     section_format      : String;
@@ -59,14 +57,14 @@ type
     err_msg : String;
   end;
 
-  TParseState = (psNONE, psTITLE_FORMAT, psHEAD_FORMAT, psSUB_HEAD_FORMAT, psTEXT_FORMAT,
+  TParseState = (psNONE, psTITLE_FORMAT, psHEAD_FORMAT, psTEXT_FORMAT,
                  psSECTION_FORMAT, psROOT_SECTION_FORMAT, psOUTPUT_FORMAT, psERROR);
 
 function Parse(const src: String): TTemplateResult;
 
 const
   labels: array[TParseState] of string = (
-    '?', 'title-format:', 'head-format:', 'sub-head-format:', 'text-format:', 'section-format:',
+    '?', 'title-format:', 'head-format:', 'text-format:', 'section-format:',
     'root-section-format:', 'output-format:', '?'
   );
 
@@ -114,8 +112,6 @@ begin
       raw_template.title_format := raw_template.title_format + cline + sLineBreak;
     psHEAD_FORMAT:
       raw_template.head_format := raw_template.head_format + cline + sLineBreak;
-    psSUB_HEAD_FORMAT:
-      raw_template.sub_head_format := raw_template.sub_head_format + cline + sLineBreak;
     psTEXT_FORMAT:
       raw_template.text_format := raw_template.text_format + cline + slinebreak;
     psSECTION_FORMAT:
@@ -138,7 +134,6 @@ var
 begin
   __TranslateRawTemplate.is_ok   := (Length(raw.title_format) > 0) and
                                     (Length(raw.head_format) > 0) and
-                                    (Length(raw.sub_head_format) > 0) and
                                     (Length(raw.text_format) > 0) and
                                     (Length(raw.section_format) > 0) and
                                     (Length(raw.output_format) > 0);
@@ -163,10 +158,6 @@ begin
   tmp := SplitString(raw.head_format, CONTENT_MARKER);
   res.head_format.prefix_text := tmp[0];
   res.head_format.postfix_text := tmp[1];
-
-  tmp := SplitString(raw.sub_head_format, CONTENT_MARKER);
-  res.sub_head_format.prefix_text := tmp[0];
-  res.sub_head_format.postfix_text := tmp[1];
 
   tmp := SplitString(raw.text_format, CONTENT_MARKER);
   res.text_format.prefix_text := tmp[0];

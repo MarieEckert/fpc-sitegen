@@ -1,0 +1,3 @@
+[submodule "sad"]
+	path = sad
+	url = https://git.heroin.trade/marie/sad

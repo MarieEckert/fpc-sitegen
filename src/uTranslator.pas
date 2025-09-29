@@ -11,7 +11,7 @@ unit uTranslator;
 
 interface
 
-uses StrUtils, SysUtils, Types, uSADParser, uShared;
+uses sad, StrUtils, SysUtils, Types, uShared;
 
 type
   TTranslateError = (treNONE, treUNKNOWN, treINVALID_SYNTAX, treSECTION_START_OVERFLOW,
@@ -29,10 +29,9 @@ type
   for TranslateSource (whose job is to begin translation)
 }
 
-function TranslateHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
-function TranslateSubHeader(generator: TGenerator; header: String; value: String)
-                           : TTranslateResult;
-function TranslateSection(generator: TGenerator; section: TSection; value: String)
+function TranslateHeader(
+  generator: TGenerator; header: TTextBlock; value: String): TTranslateResult;
+function TranslateSection(generator: TGenerator; section: PSection; value: String)
                          : TTranslateResult;
 function TranslateSource(generator: TGenerator): TTranslateResult;
 
@@ -61,9 +60,27 @@ begin
   end;
 end;
 
+function __MakeStyleSpan(constref styles: TStyleDynArray): String;
+var
+  style: TStyle;
+begin
+  if Length(styles) = 0 then
+    exit('<span class="text">');
+
+  __MakeStyleSpan := '<span class="text ';
+
+  for style in styles do
+    __MakeStyleSpan := __MakeStyleSpan + MergeStringArray(style.args, '_') + ' ';
+
+  __MakeStyleSpan := Trim(__MakeStyleSpan) + '">';
+end;
+
 { --- Public Functions --- }
 
-function TranslateHeader(generator: TGenerator; header: String; value: String): TTranslateResult;
+function TranslateHeader(
+  generator: TGenerator; header: TTextBlock; value: String): TTranslateResult;
+const
+  HEADER_LEVEL_MARKER = '$$HEADER_LEVEL$$';
 begin
   TranslateHeader.is_ok   := True;
   TranslateHeader.err     := treNONE;
@@ -71,97 +88,88 @@ begin
   TranslateHeader.value   := value;
 
   TranslateHeader.value := TranslateHeader.value +
-                           generator.template.head_format.prefix_text +
-                           header +
-                           generator.template.head_format.postfix_text;
+                           StringReplace(
+                             generator.template.head_format.prefix_text,
+                             HEADER_LEVEL_MARKER,
+                             header.styles[0].args[0],
+                             [rfReplaceAll]
+                           ) +
+                           MergeStringArray(header.content, ' ') +
+                           StringReplace(
+                             generator.template.head_format.postfix_text,
+                             HEADER_LEVEL_MARKER,
+                             header.styles[0].args[0],
+                             [rfReplaceAll]
+                           );
 end;
 
-function TranslateSubHeader(generator: TGenerator; header: String; value: String)
-                           : TTranslateResult;
-begin
-  TranslateSubHeader.is_ok   := True;
-  TranslateSubHeader.err     := treNONE;
-  TranslateSubHeader.err_msg := '';
-  TranslateSubHeader.value   := value;
-
-  TranslateSubHeader.value := TranslateSubHeader.value +
-                              generator.template.sub_head_format.prefix_text +
-                              header +
-                              generator.template.sub_head_format.postfix_text;
-end;
-
-{ TODO: move handling for insert switch into different function }
-function TranslateSection(generator: TGenerator; section: TSection; value: String)
+function TranslateSection(generator: TGenerator; section: PSection; value: String)
                          : TTranslateResult;
 const
   SECTION_NAME_MARKER = '$$SECTION_NAME$$';
-  SECTION_START_MARKER = '$$SECTION_START$$';
-  SECTION_END_MARKER = '$$SECTION_END$$';
 var
-  nline, word_ix, child_ix, tmp_ix: LongInt;
-  skip: Integer; { how many words should be skipped? }
+  word_ix, child_ix: Integer;
+  empty_spaces: Integer;
+  skip: Int64;
 
-  prefix, postfix, _word, tmp, path: String;
-  lines, words: TStringDynArray;
+  prefix, span_text, _word, path, strTmp: String;
+  tmp: TStringDynArray;
 
   insert_file: Text;
 
-  { counters for $color and $style switches }
-  style_count: Integer;
-
-  ended, in_text: Boolean;
+  block: TTextBlock;
 begin
   TranslateSection.is_ok   := True;
   TranslateSection.err     := treNONE;
   TranslateSection.err_msg := '';
   TranslateSection.value   := value;
 
-  if section.is_root then
+  { only the root section is allowed to have a Nil parent }
+  if section^.parent = Nil then
     prefix := generator.template.root_section_format.prefix_text
   else
     prefix := generator.template.section_format.prefix_text;
 
-  prefix := StringReplace(prefix, SECTION_NAME_MARKER, section.name, [rfReplaceAll]);
+  prefix := StringReplace(prefix, SECTION_NAME_MARKER, section^.name, [rfReplaceAll]);
 
   TranslateSection.value := TranslateSection.value + prefix;
 
-  lines := SplitString(section.contents, sLineBreak);
-
   child_ix := 0;
-  style_count := 0;
-  in_text := False;
+  empty_spaces := 0;
 
-  ended := False;
-
-  for nline := 0 to Length(lines) - 1 do
+  for block in section^.blocks do
   begin
-    if Length(lines[nline]) < 1 then
+    if Length(block.content) = 0 then
+      continue;
+
+    if (Length(block.styles) = 1) and (block.styles[0].kind = TStyleKind.Head) then
     begin
-      if in_text
-      and (
-           (generator.options.auto_break = abmEL)
-        or (generator.options.auto_break = abmLF)
-      ) then
-        TranslateSection.value := TranslateSection.value + '<br>';
+      TranslateSection := TranslateHeader(generator, block, TranslateSection.value);
+      if not TranslateSection.is_ok then
+        exit;
       continue;
     end;
 
-    words := SplitString(lines[nline], ' ');
+    span_text := __MakeStyleSpan(block.styles);
+    TranslateSection.value := TranslateSection.value + span_text;
 
-    skip := 0; { NOTE: This /could/ cause problems but is there to prevent problems }
-    for word_ix := 0 to Length(words) - 1 do
+    word_ix := 0;
+    skip := 0;
+    for _word in block.content do
     begin
       if skip > 0 then
       begin
         dec(skip);
         continue;
       end;
-      _word := words[word_ix];
+
+      if ((empty_spaces = 1) and (generator.options.auto_break = abmLF))
+      or ((empty_spaces = 2) and (generator.options.auto_break = abmEL)) then
+        TranslateSection.value := TranslateSection.value + '<br>';
 
       case _word of
         SECTION_START_MARKER: begin
-          __TextGuard(in_text, True, generator, TranslateSection);
-          if child_ix >= Length(section.children) then
+          if child_ix >= Length(section^.children) then
           begin
             TranslateSection.is_ok   := False;
             TranslateSection.err     := treSECTION_START_OVERFLOW;
@@ -170,95 +178,25 @@ begin
             exit;
           end;
 
-          TranslateSection := TranslateSection(generator, section.children[child_ix],
-                                               TranslateSection.value);
-          inc(child_ix);
+          TranslateSection.value := TranslateSection.value + '</span>';
+          TranslateSection := TranslateSection(
+                                generator,
+                                section^.children[child_ix],
+                                TranslateSection.value
+                              );
+
+          Inc(child_ix);
           if not TranslateSection.is_ok then
             exit;
         end;
         SECTION_END_MARKER: begin
-          ended := True;
-          break;
-        end;
-        HEADER: begin
-          __TextGuard(in_text, True, generator, TranslateSection);
-
-          TranslateSection := TranslateHeader(generator, MergeStringArray(
-                                Copy(words, word_ix+1, Length(words)-1),
-                                ' '
-                              ), TranslateSection.value);
-          if not TranslateSection.is_ok then
-            exit;
-
-          break;
-        end;
-        COLOR: begin { deprecated, should be removed in time }
-          inc(style_count);
-          if word_ix >= Length(words) then
-          begin
-            TranslateSection.is_ok   := False;
-            TranslateSection.err     := treMISSING_SWITCH_PARAMETER;
-            TranslateSection.err_msg := 'color switch is missing its parameter!';
-            exit;
-          end;
-
-          __TextGuard(in_text, False, generator, TranslateSection);
-
-          tmp := Copy(words[word_ix+1], 1, Length(words[word_ix+1]) - 1);
-          TranslateSection.value := TranslateSection.value + '<span class="color-' + tmp + '">';
-          inc(skip);
-
-          writeln(stderr, 'WARNING: color switch is deprecated');
-        end;
-        STYLE: begin
-          inc(style_count);
-          if word_ix >= Length(words) then
-          begin
-            TranslateSection.is_ok   := False;
-            TranslateSection.err     := treMISSING_SWITCH_PARAMETER;
-            TranslateSection.err_msg := 'style switch is missing its parameter!';
-            exit;
-          end;
-
-          __TextGuard(in_text, False, generator, TranslateSection);
-
-          tmp := Copy(words[word_ix+1], 1, Length(words[word_ix+1]) - 1);
-          TranslateSection.value := TranslateSection.value + '<span class="style-' + tmp + '">';
-          inc(skip);
-        end;
-        RESET_ONE: begin
-          if style_count = 0 then
-          begin
-            TranslateSection.is_ok   := False;
-            TranslateSection.err     := treGENERIC_SWITCH;
-            TranslateSection.err_msg := 'reset switch when no styles active!';
-            exit;
-          end;
-
-          TranslateSection.value := TranslateSection.value + '</span>';
-          dec(style_count);
-        end;
-        RESET_ALL: begin
-          for tmp_ix := 0 to style_count - 1 do
-          begin
-            TranslateSection.value := TranslateSection.value + '</span>';
-          end;
-          style_count := 0;
-        end;
-        SUB_HEADER: begin
-          __TextGuard(in_text, True, generator, TranslateSection);
-
-          TranslateSection := TranslateSubHeader(generator, MergeStringArray(
-                                Copy(words, word_ix+1, Length(words)-1),
-                                ' '
-                              ), TranslateSection.value);
-          if not TranslateSection.is_ok then
-            exit;
-
-          break;
         end;
         '{$insert': begin
-          if word_ix + 1 >= Length(words) then
+          skip := word_ix;
+          tmp := sad.ParseSwitchArgs(block.content, skip);
+          skip := Length(tmp);
+
+          if Length(tmp) <> 1 then
           begin
             TranslateSection.is_ok   := False;
             TranslateSection.err     := treGENERIC_SWITCH;
@@ -266,12 +204,11 @@ begin
             exit;
           end;
 
-          tmp := Copy(words[word_ix+1], 1, Length(words[word_ix+1]) - 1);
-          if not generator.options.file_defs.TryGetData(tmp, path) then
+          if not generator.options.file_defs.TryGetData(tmp[0], path) then
           begin
             TranslateSection.is_ok   := False;
             TranslateSection.err     := treGENERIC_SWITCH;
-            TranslateSection.err_msg := 'no such file defined ("' + tmp + '")';
+            TranslateSection.err_msg := 'no such file defined ("' + tmp[0] + '")';
             exit;
           end;
 
@@ -288,39 +225,26 @@ begin
 
           while not eof(insert_file) do
           begin
-            readln(insert_file, tmp);
-            TranslateSection.value := TranslateSection.value + tmp + sLineBreak;
+            readln(insert_file, strTmp);
+            TranslateSection.value := TranslateSection.value + strTmp + sLineBreak;
           end;
 
           Close(insert_file);
 
           skip := 1;
         end;
-        { regular text }
+        sLineBreak: Inc(empty_spaces);
         else begin
-          __TextGuard(in_text, False, generator, TranslateSection);
+          empty_spaces := 0;
           TranslateSection.value := TranslateSection.value + _word + ' ';
         end;
       end;
+
+      Inc(word_ix);
     end;
 
-    if in_text and (generator.options.auto_break = abmLF) then
-      TranslateSection.value := TranslateSection.value + '<br>';
-
-    TranslateSection.value := TranslateSection.value + sLineBreak;
-    if ended then
-      break;
+    TranslateSection.value := TranslateSection.value + '</span>';
   end;
-
-  if in_text then
-    TranslateSection.value := TranslateSection.value + generator.template.text_format.postfix_text;
-
-  if section.is_root then
-    postfix := generator.template.root_section_format.postfix_text
-  else
-    postfix := generator.template.section_format.postfix_text;
-
-  TranslateSection.value := TranslateSection.value + postfix;
 end;
 
 function TranslateSource(generator: TGenerator): TTranslateResult;
@@ -333,7 +257,8 @@ begin
 
   TranslateSource.value := generator.template.output_format.prefix_text;
 
-  TranslateSource := TranslateSection(generator, generator.source.root_section,
+  generator.source.root^.name := 'root';
+  TranslateSource := TranslateSection(generator, generator.source.root,
                                       TranslateSource.value);
   if not TranslateSource.is_ok then
     exit;

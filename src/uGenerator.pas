@@ -11,7 +11,7 @@ unit uGenerator;
 
 interface
 
-uses SysUtils, uSADParser, uShared, uTemplate, uTranslator;
+uses sad, SysUtils, uShared, uTemplate, uTranslator;
 
 type
   TGenError = (geNONE, geUNKNOWN, geSRC_NOT_FOUND, geTEMPLATE_NOT_FOUND, geSRC_PARSING_ERROR,
@@ -58,7 +58,9 @@ var
   generator: TGenerator;
   template_res: TTemplateResult;
   translate_res: TTranslateResult;
+  source_file: TextFile;
   output_file: TextFile;
+  parseRes: sad.TParseResult;
 begin
   generator.options := opts;
 
@@ -87,23 +89,26 @@ begin
 
   if Length(src) > 0 then
   begin
-    Assign(generator.source.doc_file, src);
-    ReSet(generator.source.doc_file);
+    Assign(source_file, src);
+    ReSet(source_file);
   end else
-    generator.source.doc_file := Input;
+    source_file := Input;
 
-  if not uSADParser.ParseStructure(generator.source) then
+  parseRes := sad.ParseOpenFile(source_file);
+  if parseRes.status <> TParseStatus.Ok then
   begin
     GenerateSingle.is_ok   := False;
     GenerateSingle.err     := geSRC_PARSING_ERROR;
-    GenerateSingle.err_msg := Format('failed to parse source %s:%d: %s', [
-                                  src,
-                                  generator.source.line_number,
-                                  uSADParser.parse_error
+    GenerateSingle.err_msg := Format('failed to parse source %s', [
+                                  MakeResultString(parseRes, src)
                                 ]
                               );
     exit;
   end;
+
+  Close(source_file);
+
+  generator.source := parseRes.document;
 
   translate_res := uTranslator.TranslateSource(generator);
   GenerateSingle.is_ok   := translate_res.is_ok;

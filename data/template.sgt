@@ -1,9 +1,7 @@
 title-format:
 <div class="title-format"> $$CONTENT$$ </div>
 head-format:
-<div class="header"> $$CONTENT$$ </div>
-sub-head-format:
-<div class="sub-header"> $$CONTENT$$ </div>
+<div class="header"><h$$HEADER_LEVEL$$> $$CONTENT$$ </h$$HEADER_LEVEL></div>
 text-format:
 <div class="text"> $$CONTENT$$ </div>
 section-format:
@@ -20,10 +18,10 @@ output-format:
 <html>
   <head>
     <title> $$DOCUMENT_TITLE$$ </title>
-    <link rel="stylesheet" type="text/css" href="example.css" />
+    <link rel="stylesheet" type="text/css" href="test.css" />
   </head>
   <body>
-    <div id="content"> 
+    <div id="content">
       $$CONTENT$$
     </div>
   </body>
