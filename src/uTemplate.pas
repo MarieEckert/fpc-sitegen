@@ -125,12 +125,28 @@ begin
   end;
 end;
 
-function __TranslateRawTemplate(raw: TRawTemplate): TTemplateResult;
+function __SplitOnce(constref src: String; var prefix: String; var postfix: String): Integer;
 const
   CONTENT_MARKER = '$$CONTENT$$';
 var
-  res: TTemplate;
   tmp: TStringDynArray;
+begin
+  tmp := SplitString(src, CONTENT_MARKER);
+  if Length(tmp) <> 2 then
+    exit(Length(tmp) - 1);
+
+  prefix := tmp[0];
+  postfix := tmp[1];
+  exit(1);
+end;
+
+function __TranslateRawTemplate(raw: TRawTemplate): TTemplateResult;
+var
+  res: TTemplate;
+  n: Integer;
+  format: String;
+label
+  invalid;
 begin
   __TranslateRawTemplate.is_ok   := (Length(raw.title_format) > 0) and
                                     (Length(raw.head_format) > 0) and
@@ -151,38 +167,57 @@ begin
 
   { TODO: Maybe add escaping of $$CONTENT$$ ? }
 
-  tmp := SplitString(raw.title_format, CONTENT_MARKER);
-  res.title_format.prefix_text := tmp[0];
-  res.title_format.postfix_text := tmp[1];
+  format := 'title-format';
+  n := __SplitOnce(raw.title_format, res.title_format.prefix_text, res.title_format.postfix_text);
+  if n <> 1 then goto invalid;
 
-  tmp := SplitString(raw.head_format, CONTENT_MARKER);
-  res.head_format.prefix_text := tmp[0];
-  res.head_format.postfix_text := tmp[1];
+  format := 'head-format';
+  n := __SplitOnce(raw.head_format, res.head_format.prefix_text, res.head_format.postfix_text);
+  if n <> 1 then goto invalid;
 
-  tmp := SplitString(raw.text_format, CONTENT_MARKER);
-  res.text_format.prefix_text := tmp[0];
-  res.text_format.postfix_text := tmp[1];
+  format := 'text-format';
+  n := __SplitOnce(raw.text_format, res.text_format.prefix_text, res.text_format.postfix_text);
+  if n <> 1 then goto invalid;
 
-  tmp := SplitString(raw.section_format, CONTENT_MARKER);
-  res.section_format.prefix_text := tmp[0];
-  res.section_format.postfix_text := tmp[1];
+  format := 'section-format';
+  n := __SplitOnce(
+    raw.section_format,
+    res.section_format.prefix_text,
+    res.section_format.postfix_text
+  );
+  if n <> 1 then goto invalid;
 
   if Length(raw.root_section_format) > 0 then
   begin
-    tmp := SplitString(raw.root_section_format, CONTENT_MARKER);
-    res.root_section_format.prefix_text := tmp[0];
-    res.root_section_format.postfix_text := tmp[1];
+  format := 'root-section-format';
+    n := __SplitOnce(
+              raw.root_section_format,
+              res.root_section_format.prefix_text,
+              res.root_section_format.postfix_text
+      );
+    if n <> 1 then goto invalid;
   end else
   begin
     res.root_section_format.prefix_text := res.section_format.prefix_text;
     res.root_section_format.postfix_text := res.section_format.postfix_text;
   end;
 
-  tmp := SplitString(raw.output_format, CONTENT_MARKER);
-  res.output_format.prefix_text := tmp[0];
-  res.output_format.postfix_text := tmp[1];
+  format := 'output-format';
+  n := __SplitOnce(
+    raw.output_format,
+    res.output_format.prefix_text,
+    res.output_format.postfix_text
+  );
+  if n <> 1 then goto invalid;
 
   __TranslateRawTemplate.value := res;
+  exit;
+
+invalid:
+  __TranslateRawTemplate.is_ok := False;
+  __TranslateRawTemplate.err := tePARSING_ERROR;
+  __TranslateRawTemplate.err_msg :=
+    'expecting exactly 1 instance of $$CONTENT$$ in ' + format + ', found ' + IntToStr(n);
 end;
 
 { --- Public Functions --- }
