@@ -2,12 +2,12 @@
 .\"     Title: fpc-sitegen
 .\"    Author: Marie Eckert
 .\" Generator: Asciidoctor 2.0.23
-.\"      Date: 2025-03-19
+.\"      Date: 2025-09-29
 .\"    Manual: FPC-SITEGEN
 .\"    Source: FPC-SITEGEN
 .\"  Language: English
 .\"
-.TH "FPC\-SITEGEN" "1" "2025-03-19" "FPC\-SITEGEN" "FPC\-SITEGEN"
+.TH "FPC\-SITEGEN" "1" "2025-09-29" "FPC\-SITEGEN" "FPC\-SITEGEN"
 .ie \n(.g .ds Aq \(aq
 .el       .ds Aq '
 .ss \n[.ss] 0
@@ -97,9 +97,7 @@ Define a name associated to a file for the insert switch.
 title\-format:
 <div class="title\-format"> $$CONTENT$$ </div>
 head\-format:
-<div class="header"> $$CONTENT$$ </div>
-sub\-head\-format:
-<div class="sub\-header"> $$CONTENT$$ </div>
+<div class="header\-$$HEADER_LEVEL$$"> $$CONTENT$$ </div>
 text\-format:
 <div class="text"> $$CONTENT$$ </div>
 section\-format:

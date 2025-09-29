@@ -1,6 +1,6 @@
 = fpc-sitegen(1)
 Marie Eckert
-v1.5
+v2.0
 :doctype: manpage
 :manmanual: FPC-SITEGEN
 :mansource: FPC-SITEGEN
@@ -46,9 +46,7 @@ Templates define formatting for most kinds of SAD switch. See the examples secti
 	title-format:
 	<div class="title-format"> $$CONTENT$$ </div>
 	head-format:
-	<div class="header"> $$CONTENT$$ </div>
-	sub-head-format:
-	<div class="sub-header"> $$CONTENT$$ </div>
+	<div class="header-$$HEADER_LEVEL$$"> $$CONTENT$$ </div>
 	text-format:
 	<div class="text"> $$CONTENT$$ </div>
 	section-format:
@@ -68,7 +66,7 @@ Templates define formatting for most kinds of SAD switch. See the examples secti
 		<link rel="stylesheet" type="text/css" href="example.css" />
 	  </head>
 	  <body>
-		<div id="content"> 
+		<div id="content">
 		  $$CONTENT$$
 		</div>
 	  </body>
