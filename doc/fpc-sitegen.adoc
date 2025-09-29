@@ -1,6 +1,6 @@
 = fpc-sitegen(1)
 Marie Eckert
-v2.0
+v2.1
 :doctype: manpage
 :manmanual: FPC-SITEGEN
 :mansource: FPC-SITEGEN

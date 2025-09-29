@@ -245,6 +245,11 @@ begin
 
     TranslateSection.value := TranslateSection.value + '</span>';
   end;
+
+  if section^.parent = Nil then
+    TranslateSection.value := TranslateSection.value + generator.template.root_section_format.postfix_text
+  else
+    TranslateSection.value := TranslateSection.value + generator.template.section_format.postfix_text;
 end;
 
 function TranslateSource(generator: TGenerator): TTranslateResult;

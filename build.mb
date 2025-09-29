@@ -21,7 +21,7 @@ end
 sector targets
 	section debug
 		str target_objdir '$(/config/files/debug_dir)$(/config/files/obj_dirname)'
-		str target_flags '-g -dDEBUG -dHaveDebug'
+		str target_flags '-g -dDEBUG'
 		list str c_rules 'compile'
 	end
 
