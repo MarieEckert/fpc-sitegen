@@ -8,6 +8,10 @@ fpc-sitegen takes in a simple-ansi-document (see [sad](https://github.com/FelixE
 Templates define the basic formatting for certain kinds of "switches", see `data/template.sgt` for
 a simple example of a template to convert to HTML.
 
+### Rewrite
+
+I plan a major rewrite or, at least, refactoring of fpc-sitegen. See `REWRITE.md` for more info.
+
 ### Prerequisites for Building
 
 fpc-sitegen requires the following programs for building:
